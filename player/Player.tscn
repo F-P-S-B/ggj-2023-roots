@@ -1,8 +1,18 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=15 format=2]
 
 [ext_resource path="res://icon.png" type="Texture" id=1]
 [ext_resource path="res://player/Player.gd" type="Script" id=2]
-[ext_resource path="res://player/skilltree/Skilltree.tscn" type="PackedScene" id=3]
+[ext_resource path="res://player/GridContainer.gd" type="Script" id=3]
+[ext_resource path="res://assets/buttons/lantern.png" type="Texture" id=4]
+[ext_resource path="res://assets/buttons/gliding.png" type="Texture" id=5]
+[ext_resource path="res://assets/buttons/jump.png" type="Texture" id=6]
+[ext_resource path="res://assets/buttons/dash.png" type="Texture" id=7]
+[ext_resource path="res://assets/buttons/pressed.png" type="Texture" id=8]
+[ext_resource path="res://assets/buttons/wall_jump.png" type="Texture" id=9]
+[ext_resource path="res://assets/buttons/hover.png" type="Texture" id=10]
+[ext_resource path="res://assets/buttons/move.png" type="Texture" id=11]
+[ext_resource path="res://assets/buttons/platform.png" type="Texture" id=12]
+[ext_resource path="res://assets/buttons/super_jump.png" type="Texture" id=13]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 31.75, 32 )
@@ -23,26 +33,119 @@ __meta__ = {
 "_edit_lock_": true
 }
 
-[node name="Skilltree" parent="." instance=ExtResource( 3 )]
-margin_left = 1.00006
-margin_top = -427.0
-margin_right = 766.0
-margin_bottom = 173.0
-
 [node name="Camera2D" type="Camera2D" parent="."]
 current = true
 drag_margin_h_enabled = true
 drag_margin_v_enabled = true
 editor_draw_drag_margin = true
 
-[connection signal="pressed" from="Skilltree/CenterContainer/GridContainer/DashButton" to="." method="_on_DashButton_pressed"]
-[connection signal="pressed" from="Skilltree/CenterContainer/GridContainer/Jump1Button" to="." method="_on_Jump1Button_pressed"]
-[connection signal="pressed" from="Skilltree/CenterContainer/GridContainer/Jump2Button" to="." method="_on_Jump2Button_pressed"]
-[connection signal="pressed" from="Skilltree/CenterContainer/GridContainer/Super JumpButton" to="." method="_on_Super_JumpButton_pressed"]
-[connection signal="pressed" from="Skilltree/CenterContainer/GridContainer/MoveButton" to="." method="_on_MoveButton_pressed"]
-[connection signal="pressed" from="Skilltree/CenterContainer/GridContainer/LanternButton" to="." method="_on_LanternButton_pressed"]
-[connection signal="pressed" from="Skilltree/CenterContainer/GridContainer/Wall JumpButton" to="." method="_on_Wall_JumpButton_pressed"]
-[connection signal="pressed" from="Skilltree/CenterContainer/GridContainer/GlideButton" to="." method="_on_GlideButton_pressed"]
-[connection signal="pressed" from="Skilltree/CenterContainer/GridContainer/PlatformButton" to="." method="_on_PlatformButton_pressed"]
+[node name="Skilltree" type="CenterContainer" parent="."]
+visible = false
+margin_top = -200.0
+margin_right = 200.0
+rect_rotation = 45.0
+rect_pivot_offset = Vector2( 5, 0 )
 
-[editable path="Skilltree"]
+[node name="GridContainer" type="GridContainer" parent="Skilltree"]
+margin_right = 200.0
+margin_bottom = 200.0
+grow_horizontal = 0
+grow_vertical = 2
+columns = 3
+script = ExtResource( 3 )
+
+[node name="Dash Button" type="TextureButton" parent="Skilltree/GridContainer"]
+margin_right = 64.0
+margin_bottom = 64.0
+hint_tooltip = "Ceci est un test"
+texture_normal = ExtResource( 7 )
+texture_pressed = ExtResource( 8 )
+texture_hover = ExtResource( 10 )
+
+[node name="Jump1 Button" type="TextureButton" parent="Skilltree/GridContainer"]
+margin_left = 68.0
+margin_right = 132.0
+margin_bottom = 64.0
+hint_tooltip = "Ceci est un test"
+texture_normal = ExtResource( 6 )
+texture_pressed = ExtResource( 8 )
+texture_hover = ExtResource( 10 )
+
+[node name="Jump2 Button" type="TextureButton" parent="Skilltree/GridContainer"]
+margin_left = 136.0
+margin_right = 200.0
+margin_bottom = 64.0
+hint_tooltip = "Ceci est un test"
+texture_normal = ExtResource( 6 )
+texture_pressed = ExtResource( 8 )
+texture_hover = ExtResource( 10 )
+
+[node name="Lantern Button" type="TextureButton" parent="Skilltree/GridContainer"]
+margin_top = 68.0
+margin_right = 64.0
+margin_bottom = 132.0
+hint_tooltip = "Ceci est un test"
+texture_normal = ExtResource( 4 )
+texture_pressed = ExtResource( 8 )
+texture_hover = ExtResource( 10 )
+
+[node name="Move Button" type="TextureButton" parent="Skilltree/GridContainer"]
+margin_left = 68.0
+margin_top = 68.0
+margin_right = 132.0
+margin_bottom = 132.0
+hint_tooltip = "Ceci est un test"
+texture_normal = ExtResource( 11 )
+texture_pressed = ExtResource( 8 )
+texture_hover = ExtResource( 10 )
+
+[node name="Glide Button" type="TextureButton" parent="Skilltree/GridContainer"]
+margin_left = 136.0
+margin_top = 68.0
+margin_right = 200.0
+margin_bottom = 132.0
+rect_pivot_offset = Vector2( -298.112, 575.868 )
+hint_tooltip = "Ceci est un test"
+texture_normal = ExtResource( 5 )
+texture_pressed = ExtResource( 8 )
+texture_hover = ExtResource( 10 )
+
+[node name="Super Jump Button" type="TextureButton" parent="Skilltree/GridContainer"]
+margin_top = 136.0
+margin_right = 64.0
+margin_bottom = 200.0
+hint_tooltip = "Ceci est un test"
+texture_normal = ExtResource( 13 )
+texture_pressed = ExtResource( 8 )
+texture_hover = ExtResource( 10 )
+
+[node name="Platform Button" type="TextureButton" parent="Skilltree/GridContainer"]
+margin_left = 68.0
+margin_top = 136.0
+margin_right = 132.0
+margin_bottom = 200.0
+rect_pivot_offset = Vector2( -298.112, 575.868 )
+hint_tooltip = "Ceci est un test"
+texture_normal = ExtResource( 12 )
+texture_pressed = ExtResource( 8 )
+texture_hover = ExtResource( 10 )
+
+[node name="Wall Jump Button" type="TextureButton" parent="Skilltree/GridContainer"]
+margin_left = 136.0
+margin_top = 136.0
+margin_right = 200.0
+margin_bottom = 200.0
+hint_tooltip = "Ceci est un test"
+texture_normal = ExtResource( 9 )
+texture_pressed = ExtResource( 8 )
+texture_hover = ExtResource( 10 )
+
+[connection signal="pressed" from="Skilltree/GridContainer/Dash Button" to="." method="_on_Dash_Button_pressed"]
+[connection signal="pressed" from="Skilltree/GridContainer/Jump1 Button" to="." method="_on_Jump1_Button_pressed"]
+[connection signal="pressed" from="Skilltree/GridContainer/Jump2 Button" to="." method="_on_Jump2Button_pressed"]
+[connection signal="pressed" from="Skilltree/GridContainer/Lantern Button" to="." method="_on_Lantern_Button_pressed"]
+[connection signal="pressed" from="Skilltree/GridContainer/Move Button" to="." method="_on_Move_Button_pressed"]
+[connection signal="pressed" from="Skilltree/GridContainer/Glide Button" to="." method="_on_Glide_Button_pressed"]
+[connection signal="pressed" from="Skilltree/GridContainer/Super Jump Button" to="." method="_on_Super_Jump_Button_pressed"]
+[connection signal="pressed" from="Skilltree/GridContainer/Platform Button" to="." method="_on_Platform_Button_pressed"]
+[connection signal="pressed" from="Skilltree/GridContainer/Wall Jump Button" to="." method="_on_Wall_Jump_Button_pressed"]
