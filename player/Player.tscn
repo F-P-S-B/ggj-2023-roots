@@ -146,18 +146,6 @@ texture_normal = ExtResource( 9 )
 texture_pressed = ExtResource( 8 )
 texture_hover = ExtResource( 10 )
 
-[node name="Area2D" type="Area2D" parent="."]
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
-position = Vector2( 32, 1 )
-shape = SubResource( 2 )
-
-[node name="Area2D2" type="Area2D" parent="."]
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D2"]
-position = Vector2( -32, 1 )
-shape = SubResource( 2 )
-
 [connection signal="pressed" from="SkilltreeZFixer/Skilltree/GridContainer/Dash Button" to="." method="_on_Dash_Button_pressed"]
 [connection signal="pressed" from="SkilltreeZFixer/Skilltree/GridContainer/Jump1 Button" to="." method="_on_Jump1_Button_pressed"]
 [connection signal="pressed" from="SkilltreeZFixer/Skilltree/GridContainer/Jump2 Button" to="." method="_on_Jump2_Button_pressed"]
