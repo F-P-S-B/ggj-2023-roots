@@ -46,11 +46,22 @@ export var enabled_skills := {
 Useful vars
 """
 var velocity := Vector2.ZERO
-var direction = 1
+var direction := 1
 var air_jumps := 0
 var dashes := 0
 var dash_timer := 0
+var skill_count : int
+var show_menu := false
+var skilltree : CenterContainer
 
+"""
+Main functions
+"""
+func _ready():
+	skill_count = calculate_skill_count()
+	print("Skill count:", skill_count)
+	skilltree = get_node("Skilltree")
+	
 
 func _physics_process(_delta):
 	if toggle_menu():
