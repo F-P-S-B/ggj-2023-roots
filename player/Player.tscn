@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=2]
+[gd_scene load_steps=15 format=2]
 
 [ext_resource path="res://icon.png" type="Texture" id=1]
 [ext_resource path="res://player/Player.gd" type="Script" id=2]
@@ -15,6 +15,8 @@
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 31.75, 32 )
+
+[sub_resource type="RectangleShape2D" id=2]
 
 [node name="Player" type="KinematicBody2D"]
 position = Vector2( 264, 55 )
@@ -137,6 +139,18 @@ hint_tooltip = "Ceci est un test"
 texture_normal = ExtResource( 9 )
 texture_pressed = ExtResource( 8 )
 texture_hover = ExtResource( 10 )
+
+[node name="Area2D" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+position = Vector2( 32, 1 )
+shape = SubResource( 2 )
+
+[node name="Area2D2" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D2"]
+position = Vector2( -32, 1 )
+shape = SubResource( 2 )
 
 [connection signal="pressed" from="Skilltree/GridContainer/Dash Button" to="." method="_on_Dash_Button_pressed"]
 [connection signal="pressed" from="Skilltree/GridContainer/Jump1 Button" to="." method="_on_Jump1_Button_pressed"]
