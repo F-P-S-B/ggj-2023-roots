@@ -4,6 +4,7 @@ export var jump_speed := 1000
 export var air_jump_speed := 1000
 export var super_jump_speed := 2000
 export var dash_speed = 500
+export var super_jump_charge = 200
 export var gravity := 100
 export var vert_friction := 0.025
 export var horiz_friction := 0.2
@@ -43,6 +44,7 @@ func calculate_skill_count():
 
 func _ready():
 	skill_count = calculate_skill_count()
+	print("Skill count:", skill_count)
 	skilltree = get_node("Skilltree")
 	
 	
@@ -151,37 +153,27 @@ func _physics_process(_delta):
 
 func _on_Dash_Button_pressed():
 	enable_skill(Skills.DASH)
-	
-
-
 
 func _on_Jump1_Button_pressed():
 	enable_skill(Skills.JUMP1)
 
-
 func _on_Jump2_Button_pressed():
 	enable_skill(Skills.JUMP2)
-
 
 func _on_Super_Jump_Button_pressed():
 	enable_skill(Skills.SUPER_JUMP)
 
-
 func _on_Move_Button_pressed():
 	enable_skill(Skills.MOVE)
-
 
 func _on_Lantern_Button_pressed():
 	enable_skill(Skills.LANTERN)
 
-
 func _on_Wall_Jump_Button_pressed():
-	enable_skill(Skills.DASH)
-
+	enable_skill(Skills.WALL_JUMP)
 
 func _on_Glide_Button_pressed():
-	enable_skill(Skills.DASH)
-
+	enable_skill(Skills.GLIDING)
 
 func _on_Platform_Button_pressed():
 	enable_skill(Skills.RAISE_PLATFORM)
@@ -190,8 +182,10 @@ func enable_skill(skill: int): # type: Enum Skills
 	if enabled_skills[skill]:
 		enabled_skills[skill] = false
 		skill_count -= 1
+		print("Skill count:", skill_count)
 		return 
-	if skill_count > max_skill_count:
+	if skill_count >= max_skill_count:
 		return
 	enabled_skills[skill] = true
 	skill_count += 1
+	print("Skill count:", skill_count)
