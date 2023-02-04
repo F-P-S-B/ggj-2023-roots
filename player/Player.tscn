@@ -2,6 +2,7 @@
 
 [ext_resource path="res://icon.png" type="Texture" id=1]
 [ext_resource path="res://player/Player.gd" type="Script" id=2]
+[ext_resource path="res://player/GridContainer.gd" type="Script" id=3]
 [ext_resource path="res://assets/buttons/lantern.png" type="Texture" id=4]
 [ext_resource path="res://assets/buttons/gliding.png" type="Texture" id=5]
 [ext_resource path="res://assets/buttons/jump.png" type="Texture" id=6]
@@ -15,8 +16,6 @@
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 31.75, 32 )
-
-[sub_resource type="RectangleShape2D" id=2]
 
 [node name="Player" type="KinematicBody2D"]
 position = Vector2( 264, 55 )
@@ -53,6 +52,7 @@ margin_bottom = 200.0
 grow_horizontal = 0
 grow_vertical = 2
 columns = 3
+script = ExtResource( 3 )
 
 [node name="Dash Button" type="TextureButton" parent="Skilltree/GridContainer"]
 margin_right = 64.0
@@ -139,18 +139,6 @@ hint_tooltip = "Ceci est un test"
 texture_normal = ExtResource( 9 )
 texture_pressed = ExtResource( 8 )
 texture_hover = ExtResource( 10 )
-
-[node name="Area2D" type="Area2D" parent="."]
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
-position = Vector2( 32, 1 )
-shape = SubResource( 2 )
-
-[node name="Area2D2" type="Area2D" parent="."]
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D2"]
-position = Vector2( -32, 1 )
-shape = SubResource( 2 )
 
 [connection signal="pressed" from="Skilltree/GridContainer/Dash Button" to="." method="_on_Dash_Button_pressed"]
 [connection signal="pressed" from="Skilltree/GridContainer/Jump1 Button" to="." method="_on_Jump1_Button_pressed"]
