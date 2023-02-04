@@ -63,8 +63,8 @@ Main functions
 func _ready():
 	skill_count = calculate_skill_count()
 	print("Skill count:", skill_count)
-	skilltree = get_node("Skilltree")
-
+	skilltree = get_node("SkilltreeZFixer/Skilltree")
+	
 
 func _physics_process(_delta):
 	if toggle_menu():
