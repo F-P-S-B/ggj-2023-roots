@@ -6,6 +6,7 @@ export var super_jump_speed := 2000
 export var dash_speed := 1000
 export var super_jump_charge = 200
 export var gravity := 100
+export var gliding_gravity := 50
 export var vert_friction := 0.025
 export var horiz_friction := 0.2
 export var max_speed := 350.0
@@ -49,10 +50,10 @@ func _ready():
 	
 	
 var velocity := Vector2.ZERO
-var direction := 1
+var direction = 1
 var air_jumps := 0
 var dashes := 0
-var dash_timer := 0
+var dash_timer = 0
 
 
 func fall():
@@ -94,7 +95,13 @@ func wall_jump():
 	pass
 	
 func gliding():
-	pass
+	if not enabled_skills[Skills.GLIDING]:
+		return
+	if Input.is_action_pressed("jump"):
+		if (not is_on_floor()) and velocity.y > 0 :
+			velocity.y += gliding_gravity - gravity
+			print(velocity.y)
+		
 	
 func dash():
 	if Input.is_action_just_pressed("dash"):
@@ -118,8 +125,6 @@ func _physics_process(_delta):
 	
 	if dash_timer > 0:
 		dash_timer -= 1
-		print("direction ",direction)
-		print("dash speed ", dash_speed)
 		velocity.x = direction * dash_speed
 		velocity.y = 0
 		move_and_slide(velocity, Vector2.UP)
@@ -139,8 +144,7 @@ func _physics_process(_delta):
 		super_jump()
 	if enabled_skills[Skills.WALL_JUMP]:
 		wall_jump()
-	if enabled_skills[Skills.GLIDING]:
-		gliding()
+	gliding()
 	if enabled_skills[Skills.DASH]:
 		if(is_on_floor()):
 			dashes = 1
