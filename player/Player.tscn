@@ -1,8 +1,7 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://icon.png" type="Texture" id=1]
 [ext_resource path="res://player/Player.gd" type="Script" id=2]
-[ext_resource path="res://player/skilltree/Skilltree.tscn" type="PackedScene" id=3]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 31.5, 28 )
@@ -23,20 +22,6 @@ texture = ExtResource( 1 )
 __meta__ = {
 "_edit_lock_": true
 }
-
-[node name="Skilltree" parent="." instance=ExtResource( 3 )]
-
-[connection signal="pressed" from="Skilltree/CenterContainer/GridContainer/DashButton" to="." method="_on_DashButton_pressed"]
-[connection signal="pressed" from="Skilltree/CenterContainer/GridContainer/Jump1Button" to="." method="_on_Jump1Button_pressed"]
-[connection signal="pressed" from="Skilltree/CenterContainer/GridContainer/Jump2Button" to="." method="_on_Jump2Button_pressed"]
-[connection signal="pressed" from="Skilltree/CenterContainer/GridContainer/Super JumpButton" to="." method="_on_Super_JumpButton_pressed"]
-[connection signal="pressed" from="Skilltree/CenterContainer/GridContainer/MoveButton" to="." method="_on_MoveButton_pressed"]
-[connection signal="pressed" from="Skilltree/CenterContainer/GridContainer/LanternButton" to="." method="_on_LanternButton_pressed"]
-[connection signal="pressed" from="Skilltree/CenterContainer/GridContainer/Wall JumpButton" to="." method="_on_Wall_JumpButton_pressed"]
-[connection signal="pressed" from="Skilltree/CenterContainer/GridContainer/GlideButton" to="." method="_on_GlideButton_pressed"]
-[connection signal="pressed" from="Skilltree/CenterContainer/GridContainer/PlatformButton" to="." method="_on_PlatformButton_pressed"]
-
-[editable path="Skilltree"]
 
 [node name="Camera2D" type="Camera2D" parent="."]
 current = true

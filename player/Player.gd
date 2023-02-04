@@ -45,6 +45,7 @@ func fall():
 func move():
 	if enabled_skills[Skills.MOVE] or (not is_on_floor()):
 		if ((not Input.is_action_pressed("move_left")) and (not Input.is_action_pressed("move_right"))) or ((Input.is_action_pressed("move_left")) and (Input.is_action_pressed("move_right"))):
+			print("cas 1")
 			velocity.x = lerp(velocity.x, 0, horiz_friction)
 		elif Input.is_action_pressed("move_right"):
 			direction = 1
@@ -80,13 +81,14 @@ func lantern():
 	
 func _physics_process(_delta):
 	if(is_on_floor()):
-		pass
-		#velocity.y = 0
-	fall()
+		velocity.y = 0
+	else:
+		fall()
+	move()
 	if enabled_skills[Skills.JUMP1] or enabled_skills[Skills.JUMP2]:
 		if enabled_skills[Skills.JUMP1] and enabled_skills[Skills.JUMP2]:
 			if (is_on_floor()):
-				air_jumps = 1
+				pass
 		jump()
 	if enabled_skills[Skills.SUPER_JUMP]:
 		super_jump()
