@@ -81,8 +81,7 @@ func _physics_process(_delta):
 	if(is_on_floor()):
 		pass
 		#velocity.y = 0
-	else:
-		fall()
+	fall()
 	if enabled_skills[Skills.JUMP1] or enabled_skills[Skills.JUMP2]:
 		if enabled_skills[Skills.JUMP1] and enabled_skills[Skills.JUMP2]:
 			if (is_on_floor()):
