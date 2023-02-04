@@ -26,16 +26,11 @@ export var jump_speed := 300
 export var air_jump_speed := 300
 export var super_jump_speed := 800
 export var super_jump_charge_duration := 120
-<<<<<<< HEAD
-export var dash_speed := 1000
-export var dash_duration := 5
 export var wall_jump_duration := 5
 export var wall_jump_speed := 200
-=======
 export var dash_speed := 780
 export var dash_duration := 4
 export var dash_friction := 0.25
->>>>>>> c41c0739639fc0f655e79f1a478890a2b78a4e8a
 
 export var gravity := 20
 export var gliding_gravity := 20
@@ -78,18 +73,13 @@ var super_jump_countdown := super_jump_charge_duration
 var show_menu := false
 var skill_count : int
 var skilltree : CenterContainer
-<<<<<<< HEAD
 var on_walls_right := 0
 var on_walls_left := 0
 var is_sliding := false
-=======
-var on_wall_right := false
-var on_wall_left := false
 onready var animation_sprite_squisher := $SpriteWrapper
 onready var animation_sprite := $SpriteWrapper/Sprite
 onready var animation_player := $AnimationPlayer
 var animation_unsquish_state = AnimationUnsquishState.DOESNT_MATTER
->>>>>>> c41c0739639fc0f655e79f1a478890a2b78a4e8a
 
 """
 Main functions
@@ -104,13 +94,9 @@ func _physics_process(_delta):
 	if toggle_menu():
 		return
 	determine_direction()
-<<<<<<< HEAD
-
-=======
 	animation_unsquish()
 	if dash_timer == 0:
 		animation_flip_to_direction()
->>>>>>> c41c0739639fc0f655e79f1a478890a2b78a4e8a
 	if super_jump():
 		return
 	if dash():
