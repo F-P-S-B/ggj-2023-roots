@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://player/Player.gd" type="Script" id=2]
 [ext_resource path="res://player/GridContainer.gd" type="Script" id=3]
@@ -69,6 +69,9 @@ tracks/0/keys = {
 "update": 1,
 "values": [ 1, 0 ]
 }
+
+[sub_resource type="RectangleShape2D" id=8]
+extents = Vector2( 0.5, 7 )
 
 [node name="Player" type="KinematicBody2D"]
 position = Vector2( 264, 55 )
@@ -208,6 +211,20 @@ anims/Jump = SubResource( 5 )
 anims/RESET = SubResource( 7 )
 anims/Run = SubResource( 4 )
 
+[node name="WallJumpLeft" type="Area2D" parent="."]
+collision_mask = 4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="WallJumpLeft"]
+position = Vector2( -4, 0 )
+shape = SubResource( 8 )
+
+[node name="WallJumpRight" type="Area2D" parent="."]
+collision_mask = 4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="WallJumpRight"]
+position = Vector2( 4, 0 )
+shape = SubResource( 8 )
+
 [connection signal="pressed" from="SkilltreeZFixer/Skilltree/GridContainer/Dash Button" to="." method="_on_Dash_Button_pressed"]
 [connection signal="pressed" from="SkilltreeZFixer/Skilltree/GridContainer/Jump1 Button" to="." method="_on_Jump1_Button_pressed"]
 [connection signal="pressed" from="SkilltreeZFixer/Skilltree/GridContainer/Jump2 Button" to="." method="_on_Jump2_Button_pressed"]
@@ -217,3 +234,7 @@ anims/Run = SubResource( 4 )
 [connection signal="pressed" from="SkilltreeZFixer/Skilltree/GridContainer/Super Jump Button" to="." method="_on_Super_Jump_Button_pressed"]
 [connection signal="pressed" from="SkilltreeZFixer/Skilltree/GridContainer/Platform Button" to="." method="_on_Platform_Button_pressed"]
 [connection signal="pressed" from="SkilltreeZFixer/Skilltree/GridContainer/Wall Jump Button" to="." method="_on_Wall_Jump_Button_pressed"]
+[connection signal="body_entered" from="WallJumpLeft" to="." method="_on_WallJumpLeft_body_entered"]
+[connection signal="body_exited" from="WallJumpLeft" to="." method="_on_WallJumpLeft_body_exited"]
+[connection signal="body_entered" from="WallJumpRight" to="." method="_on_WallJumpRight_body_entered"]
+[connection signal="body_exited" from="WallJumpRight" to="." method="_on_WallJumpRight_body_exited"]

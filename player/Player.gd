@@ -26,19 +26,19 @@ export var jump_speed := 300
 export var air_jump_speed := 300
 export var super_jump_speed := 800
 export var super_jump_charge_duration := 120
-export var wall_jump_duration := 5
-export var wall_jump_speed := 200
+export var wall_jump_duration := 3
+export var wall_jump_horiz_speed := 300
 export var dash_speed := 780
 export var dash_duration := 4
 export var dash_friction := 0.25
 
 export var gravity := 20
 export var gliding_gravity := 20
-export var sliding_speed := 5
+export var sliding_speed := 35
 export var vert_friction := 0.025
 export var horiz_friction := 0.2
 export var max_speed := 150.0
-export var max_skill_count := 5
+export var max_skill_count := 9
 
 const animation_unsquish_rate := 0.2
 const animation_jump_squish := Vector2(0.55, 1.6)
@@ -102,9 +102,9 @@ func _physics_process(_delta):
 	if dash():
 		return
 	fall()
-	#sliding()
-	#if wall_jump():
-	#	return
+	sliding()
+	if wall_jump():
+		return
 	move()
 	jump()
 	gliding()
@@ -188,6 +188,8 @@ func sliding():
 			or (on_walls_right > 0 and Input.is_action_pressed("move_right"))):
 			if enabled_skills[Skills.JUMP1] and enabled_skills[Skills.JUMP2]:
 				air_jumps = 1
+			if enabled_skills[Skills.DASH]:
+				dashes = 1
 			is_sliding = true
 			velocity.y = sliding_speed
 			return
@@ -196,14 +198,15 @@ func sliding():
 func wall_jump():
 	if wall_jump_timer > 0:
 		wall_jump_timer -= 1
-		velocity.x = (-direction) * wall_jump_speed
+		velocity = move_and_slide(velocity, Vector2.UP)
 		return true
 	if not is_sliding:
 		return false
 	if Input.is_action_just_pressed("jump"):
 		wall_jump_timer = wall_jump_duration - 1
 		velocity.y -= jump_speed
-		velocity.x = direction * wall_jump_speed
+		velocity.x = (-direction) * wall_jump_horiz_speed
+		velocity = move_and_slide(velocity, Vector2.UP)
 		return true
 	
 func gliding():
