@@ -1,12 +1,78 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://player/PlayerStanding.png" type="Texture" id=1]
 [ext_resource path="res://player/Player.gd" type="Script" id=2]
 [ext_resource path="res://player/GridContainer.gd" type="Script" id=3]
 [ext_resource path="res://assets/buttons/Button.png" type="Texture" id=4]
+[ext_resource path="res://player/PlayerRunning.png" type="Texture" id=5]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 3.9, 7.9 )
+
+[sub_resource type="Animation" id=2]
+resource_name = "Idle"
+length = 0.01
+step = 0.01
+tracks/0/type = "value"
+tracks/0/path = NodePath("SpriteWrapper/Sprite:texture")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ ExtResource( 1 ) ]
+}
+
+[sub_resource type="Animation" id=5]
+resource_name = "Jump"
+length = 0.01
+tracks/0/type = "value"
+tracks/0/path = NodePath("SpriteWrapper/Sprite:texture")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ ExtResource( 1 ) ]
+}
+
+[sub_resource type="Animation" id=3]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/path = NodePath("SpriteWrapper/Sprite:texture")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ ExtResource( 1 ) ]
+}
+
+[sub_resource type="Animation" id=4]
+resource_name = "Run"
+length = 0.3
+step = 0.15
+tracks/0/type = "value"
+tracks/0/path = NodePath("SpriteWrapper/Sprite:texture")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.15 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ ExtResource( 5 ), ExtResource( 1 ) ]
+}
 
 [node name="Player" type="KinematicBody2D"]
 position = Vector2( 264, 55 )
@@ -141,6 +207,10 @@ texture_pressed = ExtResource( 4 )
 texture_hover = ExtResource( 4 )
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+anims/Idle = SubResource( 2 )
+anims/Jump = SubResource( 5 )
+anims/RESET = SubResource( 3 )
+anims/Run = SubResource( 4 )
 
 [connection signal="pressed" from="SkilltreeZFixer/Skilltree/GridContainer/Dash Button" to="." method="_on_Dash_Button_pressed"]
 [connection signal="pressed" from="SkilltreeZFixer/Skilltree/GridContainer/Jump1 Button" to="." method="_on_Jump1_Button_pressed"]
