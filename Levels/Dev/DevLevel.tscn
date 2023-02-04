@@ -48,3 +48,13 @@ tile_data = PoolIntArray( 196650, 0, 0, 196651, 0, 0, 196652, 0, 0, 196653, 0, 0
 
 [node name="Player" parent="." instance=ExtResource( 1 )]
 position = Vector2( 96, 176 )
+jump_speed = null
+air_jump_speed = null
+super_jump_speed = null
+dash_speed = null
+gravity = null
+vert_friction = null
+horiz_friction = null
+max_speed = null
+max_skill_count = null
+enabled_skills = null

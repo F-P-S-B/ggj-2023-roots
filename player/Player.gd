@@ -8,7 +8,7 @@ export var gravity := 100
 export var vert_friction := 0.025
 export var horiz_friction := 0.2
 export var max_speed := 350.0
-export var max_skill_count := 2
+export var max_skill_count := 5
 var skill_count = 0
 var show_menu = false
 var skilltree
@@ -25,8 +25,8 @@ enum Skills{
 }
 
 export var enabled_skills := {
-	Skills.MOVE : true,
-	Skills.JUMP1 : true,
+	Skills.MOVE : false,
+	Skills.JUMP1 : false,
 	Skills.JUMP2 : false,
 	Skills.SUPER_JUMP : false,
 	Skills.WALL_JUMP : false,
@@ -50,7 +50,7 @@ var velocity := Vector2.ZERO
 var direction := 1
 var air_jumps := 0
 var dashes := 0
-var dash timer := 0
+var dash_timer := 0
 
 
 func fall():
@@ -59,25 +59,20 @@ func fall():
 	
 func move():
 	if not (enabled_skills[Skills.MOVE]) and is_on_floor():
-		print(1)
 		velocity.x = lerp(velocity.x, 0, horiz_friction)
 		return 
 	
 	if (Input.is_action_pressed("move_left")) and (Input.is_action_pressed("move_right")):
-		print(2)
 		velocity.x = lerp(velocity.x, 0, horiz_friction)
 		return
 	if Input.is_action_pressed("move_right"):
-		print(3)
 		direction = 1
 		velocity.x = lerp(velocity.x, max_speed * direction, horiz_friction)
 		return
 	if Input.is_action_pressed("move_left"):
-		print(4)
 		direction = -1
 		velocity.x = lerp(velocity.x, max_speed * direction, horiz_friction)
 		return
-	print(5)
 	velocity.x = lerp(velocity.x, 0, horiz_friction)
 
 
@@ -103,7 +98,7 @@ func dash():
 	if Input.is_action_just_pressed("dash"):
 		if(dashes >= 1):
 			dashes -= 1
-			velocity.x = direction * dash_speed
+			dash_timer = 5
 	
 func raise_platform():
 	pass
@@ -119,6 +114,12 @@ func _physics_process(_delta):
 		return
 	skilltree.hide()
 	
+	if dash_timer > 0:
+		dash_timer -= 1
+		velocity.x = direction * dash_speed
+		velocity.y = 0
+		move_and_slide(velocity, Vector2.UP)
+		return
 	
 	if(is_on_floor()):
 		velocity.y = 1
