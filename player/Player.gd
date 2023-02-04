@@ -55,6 +55,8 @@ var super_jump_countdown := super_jump_charge_duration
 var show_menu := false
 var skill_count : int
 var skilltree : CenterContainer
+var on_wall_right := false
+var on_wall_left := false
 
 """
 Main functions
@@ -142,7 +144,7 @@ func super_jump():
 func wall_jump():
 	if not enabled_skills[Skills.WALL_JUMP]:
 		return
-	pass
+	
 	
 func gliding():
 	if not enabled_skills[Skills.GLIDING]:
@@ -176,7 +178,7 @@ func raise_platform():
 	if not enabled_skills[Skills.RAISE_PLATFORM]:
 		return
 	pass
-	
+
 func lantern():
 	if not enabled_skills[Skills.LANTERN]:
 		return
@@ -185,6 +187,12 @@ func lantern():
 """
 Signals
 """
+func _on_Area2DGauche_body_entered(body : Node):
+	print("body enterde bienn")	
+	
+func _on_Area2D2DROITE_body_entered(body : Node):
+	print("111")
+
 func _on_Dash_Button_pressed():
 	enable_skill(Skills.DASH)
 
