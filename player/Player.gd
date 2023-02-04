@@ -23,24 +23,27 @@ export var super_jump_speed := 2000
 export var super_jump_charge_duration := 120
 export var dash_speed := 1000
 export var dash_duration := 5
+export var wall_jump_duration := 5
+export var wall_jump_speed := 200
 
 export var gravity := 100
 export var gliding_gravity := 20
+export var sliding_speed := 50
 export var vert_friction := 0.025
 export var horiz_friction := 0.2
 export var max_speed := 350.0
 export var max_skill_count := 5
 
 export var enabled_skills := {
-	Skills.MOVE : false,
-	Skills.JUMP1 : false,
-	Skills.JUMP2 : false,
-	Skills.SUPER_JUMP : false,
-	Skills.WALL_JUMP : false,
-	Skills.GLIDING : false,
-	Skills.DASH : false,
-	Skills.RAISE_PLATFORM : false,
-	Skills.LANTERN : false,
+	Skills.MOVE : true,
+	Skills.JUMP1 : true,
+	Skills.JUMP2 : true,
+	Skills.SUPER_JUMP : true,
+	Skills.WALL_JUMP : true,
+	Skills.GLIDING : true,
+	Skills.DASH : true,
+	Skills.RAISE_PLATFORM : true,
+	Skills.LANTERN : true,
 }
 
 """
@@ -51,12 +54,14 @@ var direction := 1
 var air_jumps := 0
 var dashes := 0
 var dash_timer := 0
+var wall_jump_timer := 0
 var super_jump_countdown := super_jump_charge_duration
 var show_menu := false
 var skill_count : int
 var skilltree : CenterContainer
-var on_wall_right := false
-var on_wall_left := false
+var on_walls_right := 0
+var on_walls_left := 0
+var is_sliding := false
 
 """
 Main functions
@@ -71,14 +76,17 @@ func _physics_process(_delta):
 	if toggle_menu():
 		return
 	determine_direction()
+
 	if super_jump():
 		return
 	if dash():
 		return
 	fall()
+	sliding()
+	if wall_jump():
+		return
 	move()
 	jump()
-	wall_jump()
 	gliding()
 	raise_platform()
 	lantern()
@@ -141,10 +149,28 @@ func super_jump():
 	super_jump_countdown = super_jump_charge_duration
 	return false
 	
-func wall_jump():
+func sliding():	
 	if not enabled_skills[Skills.WALL_JUMP]:
 		return
-	
+	if Input.is_action_pressed("move_left") and Input.is_action_pressed("move_right"):
+		return
+	if enabled_skills[Skills.JUMP1] and enabled_skills[Skills.JUMP2] and is_on_floor():
+		air_jumps = 1
+	if Input.is_action_pressed("move_left") or Input.is_action_pressed("move_right"):
+		velocity.y = sliding_speed
+			
+func wall_jump():
+	if wall_jump_timer > 0:
+		wall_jump_timer -= 1
+		velocity.x = (-direction) * wall_jump_speed
+		return true
+	if not is_sliding:
+		return false
+	if Input.is_action_just_pressed("jump"):
+		wall_jump_timer = wall_jump_duration - 1
+		velocity.y -= jump_speed
+		velocity.x = direction * wall_jump_speed
+		return true
 	
 func gliding():
 	if not enabled_skills[Skills.GLIDING]:
@@ -187,11 +213,21 @@ func lantern():
 """
 Signals
 """
-func _on_Area2DGauche_body_entered(body : Node):
-	print("body enterde bienn")	
+func _on_WallJumpLeft_body_entered(_body : Node):
+	on_walls_left += 1
+	print("cas1")
 	
-func _on_Area2D2DROITE_body_entered(body : Node):
-	print("111")
+func _on_WallJumpLeft_body_exited(_body : Node):
+	on_walls_left -= 1
+	print("cas2")
+	
+func _on_WallJumpRight_body_entered(_body : Node):
+	on_walls_right += 1
+	print("cas3")
+	
+func _on_WallJumpRight_body_exited(_body : Node):
+	on_walls_right -= 1
+	print("cas4")
 
 func _on_Dash_Button_pressed():
 	enable_skill(Skills.DASH)

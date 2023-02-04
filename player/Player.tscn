@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://player/PlayerStanding.png" type="Texture" id=1]
 [ext_resource path="res://player/Player.gd" type="Script" id=2]
@@ -8,8 +8,15 @@
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 3.9, 7.9 )
 
+[sub_resource type="RectangleShape2D" id=2]
+extents = Vector2( 0.5, 4.66699 )
+
+[sub_resource type="RectangleShape2D" id=3]
+extents = Vector2( 0.5625, 4.64583 )
+
 [node name="Player" type="KinematicBody2D"]
 position = Vector2( 264, 55 )
+collision_mask = 4
 script = ExtResource( 2 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
@@ -35,9 +42,9 @@ editor_draw_drag_margin = true
 z_index = 5
 
 [node name="Skilltree" type="CenterContainer" parent="SkilltreeZFixer"]
-margin_top = -203.536
+margin_top = -207.0
 margin_right = 210.0
-margin_bottom = 6.464
+margin_bottom = 3.0
 rect_rotation = 45.0
 rect_pivot_offset = Vector2( 5, 0 )
 
@@ -137,6 +144,24 @@ texture_normal = ExtResource( 4 )
 texture_pressed = ExtResource( 4 )
 texture_hover = ExtResource( 4 )
 
+[node name="WallJumpLeft" type="Area2D" parent="."]
+collision_layer = 2
+collision_mask = 4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="WallJumpLeft"]
+position = Vector2( -4, 0.000488281 )
+scale = Vector2( 1, 1.5 )
+shape = SubResource( 2 )
+
+[node name="WallJumpRight" type="Area2D" parent="."]
+collision_layer = 2
+collision_mask = 4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="WallJumpRight"]
+position = Vector2( 4, 0 )
+scale = Vector2( 1, 1.5 )
+shape = SubResource( 3 )
+
 [connection signal="pressed" from="SkilltreeZFixer/Skilltree/GridContainer/Dash Button" to="." method="_on_Dash_Button_pressed"]
 [connection signal="pressed" from="SkilltreeZFixer/Skilltree/GridContainer/Jump1 Button" to="." method="_on_Jump1_Button_pressed"]
 [connection signal="pressed" from="SkilltreeZFixer/Skilltree/GridContainer/Jump2 Button" to="." method="_on_Jump2_Button_pressed"]
@@ -146,3 +171,7 @@ texture_hover = ExtResource( 4 )
 [connection signal="pressed" from="SkilltreeZFixer/Skilltree/GridContainer/Super Jump Button" to="." method="_on_Super_Jump_Button_pressed"]
 [connection signal="pressed" from="SkilltreeZFixer/Skilltree/GridContainer/Platform Button" to="." method="_on_Platform_Button_pressed"]
 [connection signal="pressed" from="SkilltreeZFixer/Skilltree/GridContainer/Wall Jump Button" to="." method="_on_Wall_Jump_Button_pressed"]
+[connection signal="body_entered" from="WallJumpLeft" to="." method="_on_WallJumpLeft_body_entered"]
+[connection signal="body_exited" from="WallJumpLeft" to="." method="_on_WallJumpLeft_body_exited"]
+[connection signal="body_entered" from="WallJumpRight" to="." method="_on_WallJumpRight_body_entered"]
+[connection signal="body_exited" from="WallJumpRight" to="." method="_on_WallJumpRight_body_exited"]
