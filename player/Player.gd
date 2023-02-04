@@ -3,15 +3,15 @@ extends KinematicBody2D
 export var jump_speed := 1000
 export var air_jump_speed := 1000
 export var super_jump_speed := 2000
-export var dash_speed = 500
+export var dash_speed := 1000
 export var super_jump_charge = 200
 export var gravity := 100
 export var vert_friction := 0.025
 export var horiz_friction := 0.2
 export var max_speed := 350.0
 export var max_skill_count := 5
-var skill_count = 0
-var show_menu = false
+var skill_count := 0
+var show_menu := false
 var skilltree
 enum Skills{
 	MOVE,
@@ -118,6 +118,8 @@ func _physics_process(_delta):
 	
 	if dash_timer > 0:
 		dash_timer -= 1
+		print("direction ",direction)
+		print("dash speed ", dash_speed)
 		velocity.x = direction * dash_speed
 		velocity.y = 0
 		move_and_slide(velocity, Vector2.UP)
