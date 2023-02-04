@@ -31,30 +31,47 @@ export var enabled_skills := {
 	Skills.RAISE_PLATFORM : false,
 	Skills.LANTERN : false,
 }
+func calculate_skill_count():
+	var count = 0
+	for skill in enabled_skills:
+		count += int(enabled_skills[skill])
+	return count
 
-
-
+func _ready():
+	skill_count = calculate_skill_count()
+	print(skill_count)
 var velocity := Vector2.ZERO
 var direction := 1
 var air_jumps := 0
+
 
 func fall():
 	velocity.y = (1-vert_friction)*velocity.y
 	velocity.y += gravity
 	
 func move():
-	if enabled_skills[Skills.MOVE] or (not is_on_floor()):
-		if ((not Input.is_action_pressed("move_left")) and (not Input.is_action_pressed("move_right"))) or ((Input.is_action_pressed("move_left")) and (Input.is_action_pressed("move_right"))):
-			print("cas 1")
-			velocity.x = lerp(velocity.x, 0, horiz_friction)
-		elif Input.is_action_pressed("move_right"):
-			direction = 1
-			velocity.x = lerp(velocity.x, max_speed * direction, horiz_friction)
-		elif Input.is_action_pressed("move_left"):
-			direction = -1
-			velocity.x = lerp(velocity.x, max_speed * direction, horiz_friction)
-	else:
+	if not (enabled_skills[Skills.MOVE]) and is_on_floor():
+		print(1)
 		velocity.x = lerp(velocity.x, 0, horiz_friction)
+		return 
+	
+	if (Input.is_action_pressed("move_left")) and (Input.is_action_pressed("move_right")):
+		print(2)
+		velocity.x = lerp(velocity.x, 0, horiz_friction)
+		return
+	if Input.is_action_pressed("move_right"):
+		print(3)
+		direction = 1
+		velocity.x = lerp(velocity.x, max_speed * direction, horiz_friction)
+		return
+	if Input.is_action_pressed("move_left"):
+		print(4)
+		direction = -1
+		velocity.x = lerp(velocity.x, max_speed * direction, horiz_friction)
+		return
+	print(5)
+	velocity.x = lerp(velocity.x, 0, horiz_friction)
+
 
 func jump():
 	if Input.is_action_pressed("jump"):
