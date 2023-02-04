@@ -1,5 +1,4 @@
 extends KinematicBody2D
-
 """
 Types
 """
