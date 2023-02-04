@@ -66,6 +66,7 @@ func _ready():
 func _physics_process(_delta):
 	if toggle_menu():
 		return
+	determine_direction()
 	if dash():
 		return
 	fall()
@@ -145,7 +146,7 @@ func dash():
 		dash_timer -= 1
 		velocity.x = direction * dash_speed
 		velocity.y = 0
-		var _m = move_and_slide(velocity, Vector2.UP)
+		velocity = move_and_slide(velocity, Vector2.UP)
 		return true
 		
 	if not enabled_skills[Skills.DASH]:
@@ -218,6 +219,15 @@ func toggle_menu():
 		return true
 	skilltree.hide()
 	return false
+	
+func determine_direction():
+	if (Input.is_action_pressed("move_left")) and (Input.is_action_pressed("move_right")):
+		return
+	if Input.is_action_pressed("move_right"):
+		direction = 1
+		return
+	if Input.is_action_pressed("move_left"):
+		direction = -1
 
 func enable_skill(skill: int): # type: Enum Skills
 	if enabled_skills[skill]:
