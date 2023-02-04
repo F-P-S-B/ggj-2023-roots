@@ -140,16 +140,16 @@ texture_normal = ExtResource( 9 )
 texture_pressed = ExtResource( 8 )
 texture_hover = ExtResource( 10 )
 
-[node name="Area2D" type="Area2D" parent="."]
+[node name="Area2DGauche" type="Area2D" parent="."]
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
-position = Vector2( 32, 1 )
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2DGauche"]
+position = Vector2( -32, -7 )
 shape = SubResource( 2 )
 
-[node name="Area2D2" type="Area2D" parent="."]
+[node name="Area2D2Droit" type="Area2D" parent="."]
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D2"]
-position = Vector2( -32, 1 )
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D2Droit"]
+position = Vector2( 32, -7 )
 shape = SubResource( 2 )
 
 [connection signal="pressed" from="Skilltree/GridContainer/Dash Button" to="." method="_on_Dash_Button_pressed"]
@@ -161,3 +161,5 @@ shape = SubResource( 2 )
 [connection signal="pressed" from="Skilltree/GridContainer/Super Jump Button" to="." method="_on_Super_Jump_Button_pressed"]
 [connection signal="pressed" from="Skilltree/GridContainer/Platform Button" to="." method="_on_Platform_Button_pressed"]
 [connection signal="pressed" from="Skilltree/GridContainer/Wall Jump Button" to="." method="_on_Wall_Jump_Button_pressed"]
+[connection signal="body_entered" from="Area2DGauche" to="." method="_on_Area2DGauche_body_entered"]
+[connection signal="body_entered" from="Area2D2Droit" to="." method="_on_Area2D2Droit_body_entered"]
