@@ -1,6 +1,9 @@
 extends KinematicBody2D
 
 export var jump_speed := 1000
+export var air_jump_speed := 1000
+export var super_jump_speed := 2000
+export var dash_speed = 500
 export var gravity := 100
 export var vert_friction := 0.025
 export var horiz_friction := 0.2
@@ -43,6 +46,8 @@ func _ready():
 var velocity := Vector2.ZERO
 var direction := 1
 var air_jumps := 0
+var dashes := 0
+var dash timer := 0
 
 
 func fall():
@@ -69,9 +74,13 @@ func move():
 
 
 func jump():
-	if Input.is_action_pressed("jump"):
+	if Input.is_action_just_pressed("jump"):
 		if is_on_floor():
 			velocity.y = -jump_speed
+		else:
+			if air_jumps >= 1:
+				air_jumps -= 1
+				velocity.y = -air_jump_speed
 	
 func super_jump():
 	pass
@@ -83,7 +92,10 @@ func gliding():
 	pass
 	
 func dash():
-	pass
+	if Input.is_action_just_pressed("dash"):
+		if(dashes >= 1):
+			dashes -= 1
+			velocity.x = direction * dash_speed
 	
 func raise_platform():
 	pass
@@ -92,15 +104,17 @@ func lantern():
 	pass
 	
 func _physics_process(_delta):
+	move()
+	
 	if(is_on_floor()):
 		velocity.y = 1
 	else:
 		fall()
-	move()
+		
 	if enabled_skills[Skills.JUMP1] or enabled_skills[Skills.JUMP2]:
 		if enabled_skills[Skills.JUMP1] and enabled_skills[Skills.JUMP2]:
 			if (is_on_floor()):
-				pass
+				air_jumps = 1
 		jump()
 	if enabled_skills[Skills.SUPER_JUMP]:
 		super_jump()
@@ -109,6 +123,8 @@ func _physics_process(_delta):
 	if enabled_skills[Skills.GLIDING]:
 		gliding()
 	if enabled_skills[Skills.DASH]:
+		if(is_on_floor()):
+			dashes = 1
 		dash()
 	if enabled_skills[Skills.RAISE_PLATFORM]:
 		raise_platform()
