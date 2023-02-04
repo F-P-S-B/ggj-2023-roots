@@ -28,8 +28,20 @@ var enabled_skills := {
 	Skills.LANTERN : false
 }
 
+export var vert_friction := 0.025
+export var horiz_friction := 0.25
+export var max_speed := 100.0
+
+var velocity := Vector2.ZERO
+var direction := 0
+
 func move():
-	pass
+	direction = 0
+	if Input.is_action_pressed("move_right"):
+		direction = 1
+	if Input.is_action_pressed("move_left"):
+		direction = -1
+	velocity.x = lerp(velocity.x, max_speed * direction, horiz_friction)
 
 func jump():
 	pass
