@@ -187,10 +187,10 @@ func lantern():
 """
 Signals
 """
-func _on_Area2DGauche_body_entered(body : Node):
+func _on_Area2DGauche_body_entered(_body : Node):
 	print("body enterde bienn")	
 	
-func _on_Area2D2DROITE_body_entered(body : Node):
+func _on_Area2D2DROITE_body_entered(_body : Node):
 	print("111")
 
 func _on_Dash_Button_pressed():

@@ -1,6 +1,6 @@
 [gd_scene load_steps=6 format=2]
 
-[ext_resource path="res://player/PlayerStanding.png" type="Texture" id=1]
+[ext_resource path="res://assets/PlayerStanding.png" type="Texture" id=1]
 [ext_resource path="res://player/Player.gd" type="Script" id=2]
 [ext_resource path="res://player/GridContainer.gd" type="Script" id=3]
 [ext_resource path="res://assets/buttons/Button.png" type="Texture" id=4]
@@ -36,16 +36,16 @@ z_index = 5
 
 [node name="Skilltree" type="CenterContainer" parent="SkilltreeZFixer"]
 margin_top = -203.536
-margin_right = 210.0
-margin_bottom = 6.464
+margin_right = 250.0
+margin_bottom = 46.464
 rect_rotation = 45.0
 rect_pivot_offset = Vector2( 5, 0 )
 
 [node name="GridContainer" type="GridContainer" parent="SkilltreeZFixer/Skilltree"]
-margin_left = 77.0
-margin_top = 77.0
-margin_right = 133.0
-margin_bottom = 133.0
+margin_left = 97.0
+margin_top = 97.0
+margin_right = 153.0
+margin_bottom = 153.0
 grow_horizontal = 0
 grow_vertical = 2
 columns = 3
