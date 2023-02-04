@@ -21,10 +21,12 @@ Config
 export var jump_speed := 1000
 export var air_jump_speed := 1000
 export var super_jump_speed := 2000
+export var super_jump_charge_duration := 120
 export var dash_speed := 1000
-export var super_jump_charge = 200
+export var dash_duration := 5
+
 export var gravity := 100
-export var gliding_gravity := 50
+export var gliding_gravity := 20
 export var vert_friction := 0.025
 export var horiz_friction := 0.2
 export var max_speed := 350.0
@@ -50,8 +52,9 @@ var direction := 1
 var air_jumps := 0
 var dashes := 0
 var dash_timer := 0
-var skill_count : int
+var super_jump_countdown := super_jump_charge_duration
 var show_menu := false
+var skill_count : int
 var skilltree : CenterContainer
 var on_wall_right := false
 var on_wall_left := false
@@ -69,21 +72,22 @@ func _physics_process(_delta):
 	if toggle_menu():
 		return
 	determine_direction()
+	if super_jump():
+		return
 	if dash():
 		return
 	fall()
 	move()
 	jump()
-	super_jump()
 	wall_jump()
 	gliding()
 	raise_platform()
 	lantern()
 	velocity = move_and_slide(velocity, Vector2.UP)
+
 """
 Movements and skills
 """
-
 func fall():
 	velocity.y = (1-vert_friction)*velocity.y
 	velocity.y += gravity
@@ -126,8 +130,17 @@ func jump():
 	
 func super_jump():
 	if not enabled_skills[Skills.SUPER_JUMP]:
-		return
-	pass
+		return false
+	if Input.is_action_pressed("super_jump") and is_on_floor():
+		if super_jump_countdown > 0:
+			super_jump_countdown -=1			
+		return true
+	if super_jump_countdown == 0:
+		air_jumps = 0
+		velocity.y = -super_jump_speed
+		velocity = move_and_slide(velocity, Vector2.UP)
+	super_jump_countdown = super_jump_charge_duration
+	return false
 	
 func wall_jump():
 	if not enabled_skills[Skills.WALL_JUMP]:
@@ -158,7 +171,7 @@ func dash():
 	if Input.is_action_just_pressed("dash"):
 		if(dashes >= 1):
 			dashes -= 1
-			dash_timer = 5
+			dash_timer = dash_duration
 		return true
 	return false
 	
