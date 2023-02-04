@@ -111,10 +111,10 @@ rect_rotation = 45.0
 rect_pivot_offset = Vector2( 5, 0 )
 
 [node name="GridContainer" type="GridContainer" parent="SkilltreeZFixer/Skilltree"]
-margin_left = 97.0
-margin_top = 97.0
-margin_right = 153.0
-margin_bottom = 153.0
+margin_left = 125.0
+margin_top = 125.0
+margin_right = 125.0
+margin_bottom = 125.0
 grow_horizontal = 0
 grow_vertical = 2
 columns = 3
@@ -225,25 +225,6 @@ collision_mask = 4
 position = Vector2( -4, 0 )
 shape = SubResource( 8 )
 
-[node name="WallJumpRight" type="Area2D" parent="."]
-collision_mask = 4
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="WallJumpRight"]
-position = Vector2( 4, 0 )
-shape = SubResource( 8 )
-
-[connection signal="pressed" from="SkilltreeZFixer/Dash Button" to="." method="_on_Dash_Button_pressed"]
-[connection signal="pressed" from="SkilltreeZFixer/Jump1 Button" to="." method="_on_Jump1_Button_pressed"]
-[connection signal="pressed" from="SkilltreeZFixer/Jump2 Button" to="." method="_on_Jump2_Button_pressed"]
-[connection signal="pressed" from="SkilltreeZFixer/Lantern Button" to="." method="_on_Lantern_Button_pressed"]
-[connection signal="pressed" from="SkilltreeZFixer/Move Button" to="." method="_on_Move_Button_pressed"]
-[connection signal="pressed" from="SkilltreeZFixer/Glide Button" to="." method="_on_Glide_Button_pressed"]
-[connection signal="pressed" from="SkilltreeZFixer/Super Jump Button" to="." method="_on_Super_Jump_Button_pressed"]
-[connection signal="pressed" from="SkilltreeZFixer/Platform Button" to="." method="_on_Platform_Button_pressed"]
-[connection signal="pressed" from="SkilltreeZFixer/Wall Jump Button" to="." method="_on_Wall_Jump_Button_pressed"]
-[node name="WallJumpLeft" type="Area2D" parent="."]
-collision_mask = 4
-
 [node name="CollisionShape2D" type="CollisionShape2D" parent="WallJumpLeft"]
 position = Vector2( -4, 0 )
 shape = SubResource( 8 )
@@ -254,6 +235,16 @@ collision_mask = 4
 [node name="CollisionShape2D" type="CollisionShape2D" parent="WallJumpRight"]
 position = Vector2( 4, 0 )
 shape = SubResource( 8 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="WallJumpRight"]
+position = Vector2( 4, 0 )
+shape = SubResource( 8 )
+
+[node name="WallJumpLeft" type="Area2D" parent="."]
+collision_mask = 4
+
+[node name="WallJumpRight" type="Area2D" parent="."]
+collision_mask = 4
 
 [connection signal="pressed" from="SkilltreeZFixer/Dash Button" to="." method="_on_Dash_Button_pressed"]
 [connection signal="pressed" from="SkilltreeZFixer/Jump1 Button" to="." method="_on_Jump1_Button_pressed"]
@@ -268,4 +259,3 @@ shape = SubResource( 8 )
 [connection signal="body_exited" from="WallJumpLeft" to="." method="_on_WallJumpLeft_body_exited"]
 [connection signal="body_entered" from="WallJumpRight" to="." method="_on_WallJumpRight_body_entered"]
 [connection signal="body_exited" from="WallJumpRight" to="." method="_on_WallJumpRight_body_exited"]
-
