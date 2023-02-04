@@ -142,7 +142,7 @@ texture_hover = ExtResource( 10 )
 
 [connection signal="pressed" from="Skilltree/GridContainer/Dash Button" to="." method="_on_Dash_Button_pressed"]
 [connection signal="pressed" from="Skilltree/GridContainer/Jump1 Button" to="." method="_on_Jump1_Button_pressed"]
-[connection signal="pressed" from="Skilltree/GridContainer/Jump2 Button" to="." method="_on_Jump2Button_pressed"]
+[connection signal="pressed" from="Skilltree/GridContainer/Jump2 Button" to="." method="_on_Jump2_Button_pressed"]
 [connection signal="pressed" from="Skilltree/GridContainer/Lantern Button" to="." method="_on_Lantern_Button_pressed"]
 [connection signal="pressed" from="Skilltree/GridContainer/Move Button" to="." method="_on_Move_Button_pressed"]
 [connection signal="pressed" from="Skilltree/GridContainer/Glide Button" to="." method="_on_Glide_Button_pressed"]

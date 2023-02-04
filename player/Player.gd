@@ -4,11 +4,12 @@ export var jump_speed := 1000
 export var air_jump_speed := 1000
 export var super_jump_speed := 2000
 export var dash_speed = 500
+export var super_jump_charge = 200
 export var gravity := 100
 export var vert_friction := 0.025
 export var horiz_friction := 0.2
 export var max_speed := 350.0
-export var max_skill_count := 2
+export var max_skill_count := 5
 var skill_count = 0
 var show_menu = false
 var skilltree
@@ -43,6 +44,7 @@ func calculate_skill_count():
 
 func _ready():
 	skill_count = calculate_skill_count()
+	print("Skill count:", skill_count)
 	skilltree = get_node("Skilltree")
 	
 	
@@ -50,7 +52,7 @@ var velocity := Vector2.ZERO
 var direction := 1
 var air_jumps := 0
 var dashes := 0
-var dash timer := 0
+var dash_timer := 0
 
 
 func fall():
@@ -59,25 +61,20 @@ func fall():
 	
 func move():
 	if not (enabled_skills[Skills.MOVE]) and is_on_floor():
-		print(1)
 		velocity.x = lerp(velocity.x, 0, horiz_friction)
 		return 
 	
 	if (Input.is_action_pressed("move_left")) and (Input.is_action_pressed("move_right")):
-		print(2)
 		velocity.x = lerp(velocity.x, 0, horiz_friction)
 		return
 	if Input.is_action_pressed("move_right"):
-		print(3)
 		direction = 1
 		velocity.x = lerp(velocity.x, max_speed * direction, horiz_friction)
 		return
 	if Input.is_action_pressed("move_left"):
-		print(4)
 		direction = -1
 		velocity.x = lerp(velocity.x, max_speed * direction, horiz_friction)
 		return
-	print(5)
 	velocity.x = lerp(velocity.x, 0, horiz_friction)
 
 
@@ -150,37 +147,27 @@ func _physics_process(_delta):
 
 func _on_Dash_Button_pressed():
 	enable_skill(Skills.DASH)
-	
-
-
 
 func _on_Jump1_Button_pressed():
 	enable_skill(Skills.JUMP1)
 
-
 func _on_Jump2_Button_pressed():
 	enable_skill(Skills.JUMP2)
-
 
 func _on_Super_Jump_Button_pressed():
 	enable_skill(Skills.SUPER_JUMP)
 
-
 func _on_Move_Button_pressed():
 	enable_skill(Skills.MOVE)
-
 
 func _on_Lantern_Button_pressed():
 	enable_skill(Skills.LANTERN)
 
-
 func _on_Wall_Jump_Button_pressed():
-	enable_skill(Skills.DASH)
-
+	enable_skill(Skills.WALL_JUMP)
 
 func _on_Glide_Button_pressed():
-	enable_skill(Skills.DASH)
-
+	enable_skill(Skills.GLIDING)
 
 func _on_Platform_Button_pressed():
 	enable_skill(Skills.RAISE_PLATFORM)
@@ -189,8 +176,10 @@ func enable_skill(skill: int): # type: Enum Skills
 	if enabled_skills[skill]:
 		enabled_skills[skill] = false
 		skill_count -= 1
+		print("Skill count:", skill_count)
 		return 
-	if skill_count > max_skill_count:
+	if skill_count >= max_skill_count:
 		return
 	enabled_skills[skill] = true
 	skill_count += 1
+	print("Skill count:", skill_count)
