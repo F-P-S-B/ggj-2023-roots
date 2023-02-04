@@ -14,33 +14,55 @@ enum Skills{
 	LANTERN
 }
 
+enum AnimationUnsquishState {
+	DOESNT_MATTER,
+	LANDING
+}
+
 """
 Config
 """
-export var jump_speed := 1000
-export var air_jump_speed := 1000
-export var super_jump_speed := 2000
+export var jump_speed := 300
+export var air_jump_speed := 300
+export var super_jump_speed := 800
 export var super_jump_charge_duration := 120
+<<<<<<< HEAD
 export var dash_speed := 1000
 export var dash_duration := 5
+export var wall_jump_duration := 5
+export var wall_jump_speed := 200
+=======
+export var dash_speed := 780
+export var dash_duration := 4
+export var dash_friction := 0.25
+>>>>>>> c41c0739639fc0f655e79f1a478890a2b78a4e8a
 
-export var gravity := 100
+export var gravity := 20
 export var gliding_gravity := 20
+export var sliding_speed := 50
 export var vert_friction := 0.025
 export var horiz_friction := 0.2
-export var max_speed := 350.0
+export var max_speed := 150.0
 export var max_skill_count := 5
 
+const animation_unsquish_rate := 0.2
+const animation_jump_squish := Vector2(0.55, 1.6)
+const animation_land_max_squish := Vector2(1.5, 0.35)
+const animation_land_min_squish_velocity := 20.0
+const animation_land_max_squish_velocity := 600.0
+const animation_dash_squish := Vector2(2.0, 0.7)
+const animation_run_threshold := 50.0
+
 export var enabled_skills := {
-	Skills.MOVE : false,
-	Skills.JUMP1 : false,
-	Skills.JUMP2 : false,
-	Skills.SUPER_JUMP : false,
-	Skills.WALL_JUMP : false,
-	Skills.GLIDING : false,
-	Skills.DASH : false,
-	Skills.RAISE_PLATFORM : false,
-	Skills.LANTERN : false,
+	Skills.MOVE : true,
+	Skills.JUMP1 : true,
+	Skills.JUMP2 : true,
+	Skills.SUPER_JUMP : true,
+	Skills.WALL_JUMP : true,
+	Skills.GLIDING : true,
+	Skills.DASH : true,
+	Skills.RAISE_PLATFORM : true,
+	Skills.LANTERN : true,
 }
 
 """
@@ -51,12 +73,23 @@ var direction := 1
 var air_jumps := 0
 var dashes := 0
 var dash_timer := 0
+var wall_jump_timer := 0
 var super_jump_countdown := super_jump_charge_duration
 var show_menu := false
 var skill_count : int
 var skilltree : CenterContainer
+<<<<<<< HEAD
+var on_walls_right := 0
+var on_walls_left := 0
+var is_sliding := false
+=======
 var on_wall_right := false
 var on_wall_left := false
+onready var animation_sprite_squisher := $SpriteWrapper
+onready var animation_sprite := $SpriteWrapper/Sprite
+onready var animation_player := $AnimationPlayer
+var animation_unsquish_state = AnimationUnsquishState.DOESNT_MATTER
+>>>>>>> c41c0739639fc0f655e79f1a478890a2b78a4e8a
 
 """
 Main functions
@@ -71,18 +104,35 @@ func _physics_process(_delta):
 	if toggle_menu():
 		return
 	determine_direction()
+<<<<<<< HEAD
+
+=======
+	animation_unsquish()
+	if dash_timer == 0:
+		animation_flip_to_direction()
+>>>>>>> c41c0739639fc0f655e79f1a478890a2b78a4e8a
 	if super_jump():
 		return
 	if dash():
 		return
 	fall()
+	sliding()
+	if wall_jump():
+		return
 	move()
 	jump()
-	wall_jump()
 	gliding()
 	raise_platform()
 	lantern()
-	velocity = move_and_slide(velocity, Vector2.UP)
+	var __ = move_and_slide(velocity, Vector2.UP)
+	if is_on_floor():
+		animation_ground_squish()
+		velocity.y = 0.0
+	if is_on_ceiling():
+		velocity.y = 0.0
+	if is_on_wall():
+		velocity.x = 0.0
+	animation_decide()
 
 """
 Movements and skills
@@ -90,9 +140,7 @@ Movements and skills
 func fall():
 	velocity.y = (1-vert_friction)*velocity.y
 	velocity.y += gravity
-	if is_on_floor():
-		velocity.y = 1
-	
+
 func move():
 	if not (enabled_skills[Skills.MOVE]) and is_on_floor():
 		velocity.x = lerp(velocity.x, 0, horiz_friction)
@@ -122,17 +170,21 @@ func jump():
 	if Input.is_action_just_pressed("jump"):
 		if is_on_floor():
 			velocity.y = -jump_speed
+			animation_squish(animation_jump_squish)
 		else:
 			if air_jumps >= 1:
 				air_jumps -= 1
 				velocity.y = -air_jump_speed
+				animation_squish(animation_jump_squish)
 	
 func super_jump():
 	if not enabled_skills[Skills.SUPER_JUMP]:
 		return false
 	if Input.is_action_pressed("super_jump") and is_on_floor():
+		velocity.x = 0.0
+		dash_timer = 0
 		if super_jump_countdown > 0:
-			super_jump_countdown -=1			
+			super_jump_countdown -=1
 		return true
 	if super_jump_countdown == 0:
 		air_jumps = 0
@@ -141,10 +193,28 @@ func super_jump():
 	super_jump_countdown = super_jump_charge_duration
 	return false
 	
-func wall_jump():
+func sliding():	
 	if not enabled_skills[Skills.WALL_JUMP]:
 		return
-	
+	if Input.is_action_pressed("move_left") and Input.is_action_pressed("move_right"):
+		return
+	if enabled_skills[Skills.JUMP1] and enabled_skills[Skills.JUMP2] and is_on_floor():
+		air_jumps = 1
+	if Input.is_action_pressed("move_left") or Input.is_action_pressed("move_right"):
+		velocity.y = sliding_speed
+			
+func wall_jump():
+	if wall_jump_timer > 0:
+		wall_jump_timer -= 1
+		velocity.x = (-direction) * wall_jump_speed
+		return true
+	if not is_sliding:
+		return false
+	if Input.is_action_just_pressed("jump"):
+		wall_jump_timer = wall_jump_duration - 1
+		velocity.y -= jump_speed
+		velocity.x = direction * wall_jump_speed
+		return true
 	
 func gliding():
 	if not enabled_skills[Skills.GLIDING]:
@@ -157,9 +227,10 @@ func gliding():
 func dash():
 	if dash_timer > 0:
 		dash_timer -= 1
-		velocity.x = direction * dash_speed
 		velocity.y = 0
+		velocity.x *= (1 - dash_friction)
 		velocity = move_and_slide(velocity, Vector2.UP)
+		animation_squish(animation_dash_squish)
 		return true
 		
 	if not enabled_skills[Skills.DASH]:
@@ -171,6 +242,7 @@ func dash():
 		if(dashes >= 1):
 			dashes -= 1
 			dash_timer = dash_duration
+			velocity.x = direction * dash_speed
 		return true
 	return false
 	
@@ -185,13 +257,71 @@ func lantern():
 	pass
 
 """
+Animation
+"""
+func animation_unsquish():
+	animation_sprite_squisher.scale = animation_sprite_squisher.scale.linear_interpolate(
+		Vector2(1.0, 1.0), animation_unsquish_rate
+	)
+
+func animation_squish(squishinnes: Vector2):
+	animation_sprite_squisher.scale = squishinnes
+	animation_unsquish_state = AnimationUnsquishState.DOESNT_MATTER
+
+func animation_flip_to_direction():
+	animation_set_direction(direction)
+
+func animation_set_direction(d: float):
+	animation_sprite.scale.x = d
+
+func animation_ground_squish():
+	var animation_squish_factor := clamp(
+		(
+			(velocity.y - animation_land_min_squish_velocity) /
+			(animation_land_max_squish_velocity - animation_land_min_squish_velocity)
+		),
+		0.0,
+		1.0
+	)
+	var animation_squish_amount: Vector2 = lerp(
+		Vector2(1.0, 1.0),
+		animation_land_max_squish,
+		animation_squish_factor
+	)
+	if (
+		animation_unsquish_state != AnimationUnsquishState.LANDING or
+		animation_squish_amount.y < animation_sprite_squisher.scale.y
+	):
+		animation_squish(animation_squish_amount)
+		animation_unsquish_state = AnimationUnsquishState.LANDING
+
+func animation_decide():
+	if is_on_floor():
+		if abs(velocity.x) > animation_run_threshold:
+			animation_player.play("Run")
+			return
+		animation_player.play("Idle")
+		return
+	animation_player.play("Jump")
+
+"""
 Signals
 """
-func _on_Area2DGauche_body_entered(_body : Node):
-	print("body enterde bienn")	
+func _on_WallJumpLeft_body_entered(_body : Node):
+	on_walls_left += 1
+	print("cas1")
 	
-func _on_Area2D2DROITE_body_entered(_body : Node):
-	print("111")
+func _on_WallJumpLeft_body_exited(_body : Node):
+	on_walls_left -= 1
+	print("cas2")
+	
+func _on_WallJumpRight_body_entered(_body : Node):
+	on_walls_right += 1
+	print("cas3")
+	
+func _on_WallJumpRight_body_exited(_body : Node):
+	on_walls_right -= 1
+	print("cas4")
 
 func _on_Dash_Button_pressed():
 	enable_skill(Skills.DASH)
