@@ -15,22 +15,33 @@ enum Skills{
 	LANTERN
 }
 
+enum AnimationUnsquishState {
+	DOESNT_MATTER,
+	LANDING
+}
+
 """
 Config
 """
-export var jump_speed := 1000
-export var air_jump_speed := 1000
+export var jump_speed := 200
+export var air_jump_speed := 200
 export var super_jump_speed := 2000
 export var super_jump_charge_duration := 120
-export var dash_speed := 1000
+export var dash_speed := 200
 export var dash_duration := 5
 
-export var gravity := 100
+export var gravity := 20
 export var gliding_gravity := 20
 export var vert_friction := 0.025
 export var horiz_friction := 0.2
-export var max_speed := 350.0
+export var max_speed := 150.0
 export var max_skill_count := 5
+
+const animation_unsquish_rate := 0.2
+const animation_jump_squish := Vector2(0.7, 1.5)
+const animation_land_max_squish := Vector2(1.8, 0.5)
+const animation_land_min_squish_velocity := 20.0
+const animation_land_max_squish_velocity := 200.0
 
 export var enabled_skills := {
 	Skills.MOVE : false,
@@ -56,6 +67,9 @@ var super_jump_countdown := super_jump_charge_duration
 var show_menu := false
 var skill_count : int
 var skilltree : CenterContainer
+onready var animation_sprite_squisher := $SpriteWrapper
+onready var animation_player := $AnimationPlayer
+var animation_unsquish_state = AnimationUnsquishState.DOESNT_MATTER
 
 """
 Main functions
@@ -70,6 +84,7 @@ func _physics_process(_delta):
 	if toggle_menu():
 		return
 	determine_direction()
+	animation_unsquish()
 	if super_jump():
 		return
 	if dash():
@@ -81,7 +96,32 @@ func _physics_process(_delta):
 	gliding()
 	raise_platform()
 	lantern()
-	velocity = move_and_slide(velocity, Vector2.UP)
+	var __ = move_and_slide(velocity, Vector2.UP)
+	if is_on_floor():
+		var animation_squish_factor := clamp(
+			(
+				(velocity.y - animation_land_min_squish_velocity) /
+				(animation_land_max_squish_velocity - animation_land_min_squish_velocity)
+			),
+			0.0,
+			1.0
+		)
+		var animation_squish_amount: Vector2 = lerp(
+			Vector2(1.0, 1.0),
+			animation_land_max_squish,
+			animation_squish_factor
+		)
+		if (
+			animation_unsquish_state != AnimationUnsquishState.LANDING or
+			animation_squish_amount.y < animation_sprite_squisher.scale.y
+		):
+			animation_squish(animation_squish_amount)
+			animation_unsquish_state = AnimationUnsquishState.LANDING
+		velocity.y = 0.0
+	if is_on_ceiling():
+		velocity.y = 0.0
+	if is_on_wall():
+		velocity.x = 0.0
 
 """
 Movements and skills
@@ -89,8 +129,6 @@ Movements and skills
 func fall():
 	velocity.y = (1-vert_friction)*velocity.y
 	velocity.y += gravity
-	if is_on_floor():
-		velocity.y = 1
 	
 func move():
 	if not (enabled_skills[Skills.MOVE]) and is_on_floor():
@@ -121,6 +159,7 @@ func jump():
 	if Input.is_action_just_pressed("jump"):
 		if is_on_floor():
 			velocity.y = -jump_speed
+			animation_squish(animation_jump_squish)
 		else:
 			if air_jumps >= 1:
 				air_jumps -= 1
@@ -182,6 +221,18 @@ func lantern():
 	if not enabled_skills[Skills.LANTERN]:
 		return
 	pass
+
+"""
+Animation
+"""
+func animation_unsquish():
+	animation_sprite_squisher.scale = animation_sprite_squisher.scale.linear_interpolate(
+		Vector2(1.0, 1.0), animation_unsquish_rate
+	)
+
+func animation_squish(squishinnes: Vector2):
+	animation_sprite_squisher.scale = squishinnes
+	animation_unsquish_state = AnimationUnsquishState.DOESNT_MATTER
 
 """
 Signals

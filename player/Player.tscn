@@ -27,8 +27,11 @@ __meta__ = {
 "_edit_lock_": true
 }
 
-[node name="Sprite" type="Sprite" parent="."]
-position = Vector2( 0, -2 )
+[node name="SpriteWrapper" type="Node2D" parent="."]
+position = Vector2( 0, 8 )
+
+[node name="Sprite" type="Sprite" parent="SpriteWrapper"]
+position = Vector2( 0, -10 )
 texture = ExtResource( 1 )
 __meta__ = {
 "_edit_lock_": true
@@ -145,6 +148,8 @@ hint_tooltip = "Ceci est un test"
 texture_normal = ExtResource( 9 )
 texture_pressed = ExtResource( 8 )
 texture_hover = ExtResource( 10 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 
 [connection signal="pressed" from="SkilltreeZFixer/Skilltree/GridContainer/Dash Button" to="." method="_on_Dash_Button_pressed"]
 [connection signal="pressed" from="SkilltreeZFixer/Skilltree/GridContainer/Jump1 Button" to="." method="_on_Jump1_Button_pressed"]
