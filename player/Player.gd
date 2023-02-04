@@ -34,7 +34,7 @@ export var dash_friction := 0.25
 
 export var gravity := 20
 export var gliding_gravity := 20
-export var sliding_speed := 50
+export var sliding_speed := 5
 export var vert_friction := 0.025
 export var horiz_friction := 0.2
 export var max_speed := 150.0
@@ -49,15 +49,15 @@ const animation_dash_squish := Vector2(2.0, 0.7)
 const animation_run_threshold := 50.0
 
 export var enabled_skills := {
-	Skills.MOVE : true,
-	Skills.JUMP1 : true,
-	Skills.JUMP2 : true,
-	Skills.SUPER_JUMP : true,
-	Skills.WALL_JUMP : true,
-	Skills.GLIDING : true,
-	Skills.DASH : true,
-	Skills.RAISE_PLATFORM : true,
-	Skills.LANTERN : true,
+	Skills.MOVE : false,
+	Skills.JUMP1 : false,
+	Skills.JUMP2 : false,
+	Skills.SUPER_JUMP : false,
+	Skills.WALL_JUMP : false,
+	Skills.GLIDING : false,
+	Skills.DASH : false,
+	Skills.RAISE_PLATFORM : false,
+	Skills.LANTERN : false,
 }
 
 """
@@ -180,14 +180,18 @@ func super_jump():
 	return false
 	
 func sliding():	
-	if not enabled_skills[Skills.WALL_JUMP]:
-		return
-	if Input.is_action_pressed("move_left") and Input.is_action_pressed("move_right"):
-		return
-	if enabled_skills[Skills.JUMP1] and enabled_skills[Skills.JUMP2] and is_on_floor():
-		air_jumps = 1
-	if Input.is_action_pressed("move_left") or Input.is_action_pressed("move_right"):
-		velocity.y = sliding_speed
+	if enabled_skills[Skills.WALL_JUMP]:
+		if Input.is_action_pressed("move_left") and Input.is_action_pressed("move_right"):
+			is_sliding = false
+			return
+		if ((on_walls_left > 0 and Input.is_action_pressed("move_left"))
+			or (on_walls_right > 0 and Input.is_action_pressed("move_right"))):
+			if enabled_skills[Skills.JUMP1] and enabled_skills[Skills.JUMP2]:
+				air_jumps = 1
+			is_sliding = true
+			velocity.y = sliding_speed
+			return
+	is_sliding = false
 			
 func wall_jump():
 	if wall_jump_timer > 0:
