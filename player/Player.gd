@@ -5,7 +5,8 @@ export var gravity := 100
 export var vert_friction := 0.025
 export var horiz_friction := 0.2
 export var max_speed := 350.0
-
+export var max_skill_count := 2
+var skill_count = 0
 
 enum Skills{
 	MOVE,
@@ -28,7 +29,7 @@ export var enabled_skills := {
 	Skills.GLIDING : false,
 	Skills.DASH : false,
 	Skills.RAISE_PLATFORM : false,
-	Skills.LANTERN : false
+	Skills.LANTERN : false,
 }
 
 
@@ -102,6 +103,58 @@ func _physics_process(_delta):
 	velocity = move_and_slide(velocity, Vector2.UP)
 
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(delta):
-#	pass
+
+func _on_DashButton_pressed():
+	enable_skill(Skills.DASH)
+	
+
+
+
+func _on_Jump1Button_pressed():
+	enable_skill(Skills.JUMP1)
+
+
+func _on_Jump2Button_pressed():
+	enable_skill(Skills.JUMP2)
+
+
+func _on_Super_JumpButton_pressed():
+	enable_skill(Skills.SUPER_JUMP)
+
+
+func _on_MoveButton_pressed():
+	enable_skill(Skills.MOVE)
+
+
+func _on_LanternButton_pressed():
+	enable_skill(Skills.LANTERN)
+
+
+func _on_Wall_JumpButton_pressed():
+	enable_skill(Skills.DASH)
+
+
+func _on_GlideButton_pressed():
+	enable_skill(Skills.DASH)
+
+
+func _on_PlatformButton_pressed():
+	enable_skill(Skills.RAISE_PLATFORM)
+
+func enable_skill(skill: int): # type: Enum Skills
+	var value: bool = enabled_skills[skill]
+	print(skill)
+	print(value)
+	if value:
+		enabled_skills[skill] = false
+		skill_count -= 1
+		print(skill_count)
+		print(enabled_skills[skill])
+		return 
+	if skill_count > max_skill_count:
+		print("Dépasse")
+		return
+	enabled_skills[skill] = true
+	skill_count += 1
+	print(skill_count)
+	print(enabled_skills[skill])
