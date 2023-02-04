@@ -21,8 +21,8 @@ enum Skills{
 }
 
 export var enabled_skills := {
-	Skills.MOVE : false,
-	Skills.JUMP1 : false,
+	Skills.MOVE : true,
+	Skills.JUMP1 : true,
 	Skills.JUMP2 : false,
 	Skills.SUPER_JUMP : false,
 	Skills.WALL_JUMP : false,
@@ -36,6 +36,7 @@ export var enabled_skills := {
 
 var velocity := Vector2.ZERO
 var direction := 1
+var air_jumps := 0
 
 func fall():
 	velocity.y = (1-vert_friction)*velocity.y
@@ -51,7 +52,8 @@ func move():
 		elif Input.is_action_pressed("move_left"):
 			direction = -1
 			velocity.x = lerp(velocity.x, max_speed * direction, horiz_friction)
-		
+	else:
+		velocity.x = lerp(velocity.x, 0, horiz_friction)
 
 func jump():
 	if Input.is_action_pressed("jump"):
@@ -77,10 +79,15 @@ func lantern():
 	pass
 	
 func _physics_process(_delta):
-	if (not is_on_floor()):
+	if(is_on_floor()):
+		pass
+		#velocity.y = 0
+	else:
 		fall()
-	move()
 	if enabled_skills[Skills.JUMP1] or enabled_skills[Skills.JUMP2]:
+		if enabled_skills[Skills.JUMP1] and enabled_skills[Skills.JUMP2]:
+			if (is_on_floor()):
+				air_jumps = 1
 		jump()
 	if enabled_skills[Skills.SUPER_JUMP]:
 		super_jump()
