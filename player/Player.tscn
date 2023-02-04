@@ -75,6 +75,7 @@ tracks/0/keys = {
 
 [node name="Player" type="KinematicBody2D"]
 position = Vector2( 264, 55 )
+collision_mask = 4
 script = ExtResource( 2 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
@@ -102,16 +103,16 @@ z_index = 5
 
 [node name="Skilltree" type="CenterContainer" parent="SkilltreeZFixer"]
 margin_top = -203.536
-margin_right = 210.0
-margin_bottom = 6.464
+margin_right = 250.0
+margin_bottom = 46.464
 rect_rotation = 45.0
 rect_pivot_offset = Vector2( 5, 0 )
 
 [node name="GridContainer" type="GridContainer" parent="SkilltreeZFixer/Skilltree"]
-margin_left = 77.0
-margin_top = 77.0
-margin_right = 133.0
-margin_bottom = 133.0
+margin_left = 97.0
+margin_top = 97.0
+margin_right = 153.0
+margin_bottom = 153.0
 grow_horizontal = 0
 grow_vertical = 2
 columns = 3
