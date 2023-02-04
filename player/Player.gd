@@ -102,9 +102,9 @@ func _physics_process(_delta):
 	if dash():
 		return
 	fall()
-	sliding()
-	if wall_jump():
-		return
+	#sliding()
+	#if wall_jump():
+	#	return
 	move()
 	jump()
 	gliding()

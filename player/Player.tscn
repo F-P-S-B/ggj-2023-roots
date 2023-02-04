@@ -222,7 +222,3 @@ anims/Run = SubResource( 4 )
 [connection signal="pressed" from="SkilltreeZFixer/Skilltree/GridContainer/Super Jump Button" to="." method="_on_Super_Jump_Button_pressed"]
 [connection signal="pressed" from="SkilltreeZFixer/Skilltree/GridContainer/Platform Button" to="." method="_on_Platform_Button_pressed"]
 [connection signal="pressed" from="SkilltreeZFixer/Skilltree/GridContainer/Wall Jump Button" to="." method="_on_Wall_Jump_Button_pressed"]
-[connection signal="body_entered" from="WallJumpLeft" to="." method="_on_WallJumpLeft_body_entered"]
-[connection signal="body_exited" from="WallJumpLeft" to="." method="_on_WallJumpLeft_body_exited"]
-[connection signal="body_entered" from="WallJumpRight" to="." method="_on_WallJumpRight_body_entered"]
-[connection signal="body_exited" from="WallJumpRight" to="." method="_on_WallJumpRight_body_exited"]
