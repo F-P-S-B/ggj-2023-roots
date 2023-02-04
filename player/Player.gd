@@ -51,25 +51,20 @@ func fall():
 	
 func move():
 	if not (enabled_skills[Skills.MOVE]) and is_on_floor():
-		print(1)
 		velocity.x = lerp(velocity.x, 0, horiz_friction)
 		return 
 	
 	if (Input.is_action_pressed("move_left")) and (Input.is_action_pressed("move_right")):
-		print(2)
 		velocity.x = lerp(velocity.x, 0, horiz_friction)
 		return
 	if Input.is_action_pressed("move_right"):
-		print(3)
 		direction = 1
 		velocity.x = lerp(velocity.x, max_speed * direction, horiz_friction)
 		return
 	if Input.is_action_pressed("move_left"):
-		print(4)
 		direction = -1
 		velocity.x = lerp(velocity.x, max_speed * direction, horiz_friction)
 		return
-	print(5)
 	velocity.x = lerp(velocity.x, 0, horiz_friction)
 
 
