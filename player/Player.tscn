@@ -8,10 +8,8 @@
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 3.9, 7.9 )
 
-[sub_resource type="Animation" id=2]
+[sub_resource type="Animation" id=6]
 resource_name = "Idle"
-length = 0.01
-step = 0.01
 tracks/0/type = "value"
 tracks/0/path = NodePath("SpriteWrapper/Sprite:frame")
 tracks/0/interp = 1
@@ -41,7 +39,7 @@ tracks/0/keys = {
 "values": [ 1 ]
 }
 
-[sub_resource type="Animation" id=3]
+[sub_resource type="Animation" id=7]
 length = 0.001
 tracks/0/type = "value"
 tracks/0/path = NodePath("SpriteWrapper/Sprite:frame")
@@ -53,7 +51,7 @@ tracks/0/keys = {
 "times": PoolRealArray( 0 ),
 "transitions": PoolRealArray( 1 ),
 "update": 0,
-"values": [ 0 ]
+"values": [ 1 ]
 }
 
 [sub_resource type="Animation" id=4]
@@ -91,6 +89,7 @@ position = Vector2( 0, 8 )
 position = Vector2( 0, -10 )
 texture = ExtResource( 5 )
 hframes = 2
+frame = 1
 
 [node name="Camera2D" type="Camera2D" parent="."]
 current = true
@@ -205,9 +204,9 @@ texture_pressed = ExtResource( 4 )
 texture_hover = ExtResource( 4 )
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-anims/Idle = SubResource( 2 )
+anims/Idle = SubResource( 6 )
 anims/Jump = SubResource( 5 )
-anims/RESET = SubResource( 3 )
+anims/RESET = SubResource( 7 )
 anims/Run = SubResource( 4 )
 
 [connection signal="pressed" from="SkilltreeZFixer/Skilltree/GridContainer/Dash Button" to="." method="_on_Dash_Button_pressed"]
