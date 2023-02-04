@@ -26,6 +26,12 @@ __meta__ = {
 
 [node name="Skilltree" parent="." instance=ExtResource( 3 )]
 
+[node name="Camera2D" type="Camera2D" parent="."]
+current = true
+drag_margin_h_enabled = true
+drag_margin_v_enabled = true
+editor_draw_drag_margin = true
+
 [connection signal="pressed" from="Skilltree/CenterContainer/GridContainer/DashButton" to="." method="_on_DashButton_pressed"]
 [connection signal="pressed" from="Skilltree/CenterContainer/GridContainer/Jump1Button" to="." method="_on_Jump1Button_pressed"]
 [connection signal="pressed" from="Skilltree/CenterContainer/GridContainer/Jump2Button" to="." method="_on_Jump2Button_pressed"]
@@ -37,9 +43,3 @@ __meta__ = {
 [connection signal="pressed" from="Skilltree/CenterContainer/GridContainer/PlatformButton" to="." method="_on_PlatformButton_pressed"]
 
 [editable path="Skilltree"]
-
-[node name="Camera2D" type="Camera2D" parent="."]
-current = true
-drag_margin_h_enabled = true
-drag_margin_v_enabled = true
-editor_draw_drag_margin = true
