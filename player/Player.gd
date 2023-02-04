@@ -100,7 +100,6 @@ func gliding():
 	if Input.is_action_pressed("jump"):
 		if (not is_on_floor()) and velocity.y > 0 :
 			velocity.y += gliding_gravity - gravity
-			print(velocity.y)
 		
 	
 func dash():
