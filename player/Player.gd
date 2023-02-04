@@ -21,7 +21,7 @@ enum Skills{
 }
 
 export var enabled_skills := {
-	Skills.MOVE : true,
+	Skills.MOVE : false,
 	Skills.JUMP1 : true,
 	Skills.JUMP2 : false,
 	Skills.SUPER_JUMP : false,
@@ -93,7 +93,7 @@ func lantern():
 	
 func _physics_process(_delta):
 	if(is_on_floor()):
-		velocity.y = 0
+		velocity.y = 1
 	else:
 		fall()
 	move()
@@ -119,9 +119,7 @@ func _physics_process(_delta):
 
 
 func _on_DashButton_pressed():
-	enable_skill(Skills.DASH)
-	
-
+	enable_skill(Skills.DASH)	
 
 
 func _on_Jump1Button_pressed():
