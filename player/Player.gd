@@ -72,7 +72,7 @@ var wall_jump_timer := 0
 var super_jump_countdown := super_jump_charge_duration
 var show_menu := false
 var skill_count : int
-var skilltree : CenterContainer
+var skilltree : Node2D
 var on_walls_right := 0
 var on_walls_left := 0
 var is_sliding := false
@@ -81,13 +81,24 @@ onready var animation_sprite := $SpriteWrapper/Sprite
 onready var animation_player := $AnimationPlayer
 var animation_unsquish_state = AnimationUnsquishState.DOESNT_MATTER
 
+# Boutons
+onready var dash_button := $"SkilltreeZFixer/Dash Button"
+onready var jump1_button := $"SkilltreeZFixer/Jump1 Button"
+onready var jump2_button := $"SkilltreeZFixer/Jump2 Button"
+onready var lantern_button := $"SkilltreeZFixer/Lantern Button"
+onready var move_button := $"SkilltreeZFixer/Move Button"
+onready var glide_button := $"SkilltreeZFixer/Glide Button"
+onready var super_jump_button := $"SkilltreeZFixer/Super Jump Button"
+onready var platform_button := $"SkilltreeZFixer/Platform Button"
+onready var wall_jump_button := $"SkilltreeZFixer/Wall Jump Button"
+
 """
 Main functions
 """
 func _ready():
 	skill_count = calculate_skill_count()
 	print("Skill count:", skill_count)
-	skilltree = get_node("SkilltreeZFixer/Skilltree")
+	skilltree = get_node("SkilltreeZFixer")
 	
 
 func _physics_process(_delta):
@@ -315,30 +326,41 @@ func _on_WallJumpRight_body_exited(_body : Node):
 
 func _on_Dash_Button_pressed():
 	enable_skill(Skills.DASH)
+	change_icon(Skills.DASH, "dash", dash_button)
 
 func _on_Jump1_Button_pressed():
 	enable_skill(Skills.JUMP1)
+	change_icon(Skills.JUMP1, "jump", jump1_button)
+	
 
 func _on_Jump2_Button_pressed():
 	enable_skill(Skills.JUMP2)
+	change_icon(Skills.JUMP2, "jump", jump2_button)
 
 func _on_Super_Jump_Button_pressed():
 	enable_skill(Skills.SUPER_JUMP)
+	change_icon(Skills.SUPER_JUMP, "super_jump", super_jump_button)
+	
 
 func _on_Move_Button_pressed():
 	enable_skill(Skills.MOVE)
+	change_icon(Skills.MOVE, "walk", move_button)
 
 func _on_Lantern_Button_pressed():
 	enable_skill(Skills.LANTERN)
+	change_icon(Skills.LANTERN, "lantern", lantern_button)
 
 func _on_Wall_Jump_Button_pressed():
 	enable_skill(Skills.WALL_JUMP)
+	change_icon(Skills.WALL_JUMP, "wall_jump", wall_jump_button)
 
 func _on_Glide_Button_pressed():
 	enable_skill(Skills.GLIDING)
+	change_icon(Skills.GLIDING, "glide", glide_button)
 
 func _on_Platform_Button_pressed():
 	enable_skill(Skills.RAISE_PLATFORM)
+	change_icon(Skills.RAISE_PLATFORM, "platform", platform_button)
 
 
 """
@@ -379,3 +401,10 @@ func enable_skill(skill: int): # type: Enum Skills
 	enabled_skills[skill] = true
 	skill_count += 1
 	print("Skill count:", skill_count)
+
+func change_icon(skill: int, skillname: String, button: TextureButton):
+	if enabled_skills[skill]:
+		skillname += "_act"
+	button.texture_normal = load("player/boutons/" + skillname + ".png")
+	button.texture_pressed = load("player/boutons/" + skillname + ".png")
+	button.texture_hover = load("player/boutons/" + skillname + ".png")
