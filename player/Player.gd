@@ -1,9 +1,12 @@
 extends KinematicBody2D
 
+export var jump_speed := 1000
+export var gravity := 100
+export var vert_friction := 0.025
+export var horiz_friction := 0.2
+export var max_speed := 350.0
 
-# Declare member variables here. Examples:
-# var a = 2
-# var b = "text"
+
 enum Skills{
 	MOVE,
 	JUMP1,
@@ -16,9 +19,9 @@ enum Skills{
 	LANTERN
 }
 
-var enabled_skills := {
+export var enabled_skills := {
 	Skills.MOVE : false,
-	Skills.JUMP1 : false,
+	Skills.JUMP1 : true,
 	Skills.JUMP2 : false,
 	Skills.SUPER_JUMP : false,
 	Skills.WALL_JUMP : false,
@@ -28,23 +31,31 @@ var enabled_skills := {
 	Skills.LANTERN : false
 }
 
-export var vert_friction := 0.025
-export var horiz_friction := 0.25
-export var max_speed := 100.0
+
 
 var velocity := Vector2.ZERO
-var direction := 0
+var direction := 1
 
+func fall():
+	velocity.y = (1-vert_friction)*velocity.y
+	velocity.y += gravity
+	
 func move():
-	direction = 0
-	if Input.is_action_pressed("move_right"):
-		direction = 1
-	if Input.is_action_pressed("move_left"):
-		direction = -1
-	velocity.x = lerp(velocity.x, max_speed * direction, horiz_friction)
+	if enabled_skills[Skills.MOVE] or (not is_on_floor()):
+		if ((not Input.is_action_pressed("move_left")) and (not Input.is_action_pressed("move_right"))) or ((Input.is_action_pressed("move_left")) and (Input.is_action_pressed("move_right"))):
+			velocity.x = lerp(velocity.x, 0, horiz_friction)
+		elif Input.is_action_pressed("move_right"):
+			direction = 1
+			velocity.x = lerp(velocity.x, max_speed * direction, horiz_friction)
+		elif Input.is_action_pressed("move_left"):
+			direction = -1
+			velocity.x = lerp(velocity.x, max_speed * direction, horiz_friction)
+		
 
 func jump():
-	pass
+	if Input.is_action_pressed("jump"):
+		if is_on_floor():
+			velocity.y = -jump_speed
 	
 func super_jump():
 	pass
@@ -63,13 +74,11 @@ func raise_platform():
 	
 func lantern():
 	pass
-
-func _ready():
-	pass # Replace with function body.
 	
 func _physics_process(_delta):
-	if enabled_skills[Skills.MOVE]:
-		move()
+	if (not is_on_floor()):
+		fall()
+	move()
 	if enabled_skills[Skills.JUMP1] or enabled_skills[Skills.JUMP2]:
 		jump()
 	if enabled_skills[Skills.SUPER_JUMP]:
@@ -84,6 +93,7 @@ func _physics_process(_delta):
 		raise_platform()
 	if enabled_skills[Skills.LANTERN]:
 		lantern()
+	velocity = move_and_slide(velocity, Vector2.UP)
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
