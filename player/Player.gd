@@ -163,7 +163,7 @@ func _physics_process(_delta):
 		return
 	if post_interact_animation():
 		#animation
-		return	
+		return
 	if toggle_menu():
 		return
 	determine_direction()

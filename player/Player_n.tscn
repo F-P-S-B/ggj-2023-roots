@@ -119,7 +119,6 @@ position = Vector2( -8, -55 )
 z_index = 5
 
 [node name="Sprite" type="Sprite" parent="SkilltreeZFixer"]
-visible = false
 position = Vector2( -280, -369 )
 texture = ExtResource( 11 )
 
