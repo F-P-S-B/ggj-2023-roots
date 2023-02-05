@@ -95,11 +95,11 @@ func can_move_pred(r: KinematicBody2D, move: Vector2):
 
 	var platform_can_move := true
 	if r.platform != null:
-		platform_can_move = r.platform.test_move(Transform2D(), move)  
+		platform_can_move = r.platform.test_move(Transform2D(0.0, r.platform.position), move)  
 
 	if r.is_first(): 
 		return (platform_can_move
-			and r.test_move(Transform2D(), move)
+			and r.test_move(Transform2D(0.0, r.position), move)
 			and can_move_pred(r.next, r.position - r.next.position))
 	if r.is_last():
 		return platform_can_move
@@ -122,11 +122,11 @@ func can_move_next(r: KinematicBody2D, move: Vector2):
 
 	var platform_can_move := true
 	if r.platform != null:
-		platform_can_move = r.platform.test_move(Transform2D(), move)  
+		platform_can_move = r.platform.test_move(Transform2D(0.0, r.platform.position), move)  
 
 	if r.is_last(): 
 		return (platform_can_move
-			and r.test_move(Transform2D(), move)
+			and r.test_move(Transform2D(0.0, r.position), move)
 			and can_move_next(r.pred, r.position - r.next.position))
 	if r.is_last():
 		return platform_can_move

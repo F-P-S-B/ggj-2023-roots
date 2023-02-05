@@ -38,7 +38,6 @@ export var sliding_speed := 35
 export var vert_friction := 0.0
 export var horiz_friction := 0.2
 export var max_speed := 150.0
-export var max_skill_count := 9
 
 const animation_unsquish_rate := 0.2
 const animation_jump_squish := Vector2(0.55, 1.6)
@@ -71,6 +70,7 @@ var dash_timer := 0
 var wall_jump_timer := 0
 var super_jump_countdown := super_jump_charge_duration
 var show_menu := false
+var max_skill_count : int
 var skill_count : int
 var skilltree : Node2D
 var on_walls_right := 0
@@ -98,6 +98,7 @@ onready var glide_button := $"SkilltreeZFixer/Glide Button"
 onready var super_jump_button := $"SkilltreeZFixer/Super Jump Button"
 onready var platform_button := $"SkilltreeZFixer/Platform Button"
 onready var wall_jump_button := $"SkilltreeZFixer/Wall Jump Button"
+onready var dispos_label : Label = $"SkilltreeZFixer/Dispo"
 onready var text_label : RichTextLabel= $"SkilltreeZFixer/RichTextLabel"
 onready var description_title : Label= $"SkilltreeZFixer/RichTextLabel/Title"
 onready var description_label : Label= $"SkilltreeZFixer/RichTextLabel/Label"
@@ -120,6 +121,8 @@ func _ready():
 	is_dying = false
 	skill_count = calculate_skill_count()
 	skilltree = get_node("SkilltreeZFixer")
+	
+	max_skill_count = int(self.name.lstrip("Player_"))
 	
 	change_icon(Skills.DASH, "dash", dash_button)
 	change_icon(Skills.JUMP1, "jump", jump1_button)
@@ -530,6 +533,7 @@ func toggle_menu():
 	if Input.is_action_just_pressed("toggle_menu") and (show_menu or (can_open_menu > 0)):
 		show_menu = not show_menu
 	if show_menu:
+		dispos_label.text = str(skill_count) + "/" + str(max_skill_count)
 		skilltree.show()
 		return true
 	skilltree.hide()
