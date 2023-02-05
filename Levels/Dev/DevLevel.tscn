@@ -55,19 +55,28 @@ tile_data = PoolIntArray( 196650, 0, 0, 196651, 0, 0, 196652, 0, 0, 196653, 0, 0
 position = Vector2( 75, 177 )
 
 [node name="RootTile" parent="." instance=ExtResource( 4 )]
-position = Vector2( 170, 172 )
+position = Vector2( 277, 198 )
+collision_layer = 66
 
 [node name="RootTile2" parent="." instance=ExtResource( 4 )]
-position = Vector2( 172, 204 )
+position = Vector2( 277, 221 )
+collision_layer = 66
 
 [node name="RootTile3" parent="." instance=ExtResource( 4 )]
-position = Vector2( 208, 204 )
+position = Vector2( 297, 222 )
+collision_layer = 66
 
 [node name="RootTile4" parent="." instance=ExtResource( 4 )]
-position = Vector2( 246, 203 )
+position = Vector2( 321, 222 )
+collision_layer = 66
 
 [node name="RootTile5" parent="." instance=ExtResource( 4 )]
-position = Vector2( 285, 203 )
+position = Vector2( 342, 222 )
+collision_layer = 66
+
+[node name="RootTile6" parent="." instance=ExtResource( 4 )]
+position = Vector2( 342, 201 )
+collision_layer = 66
 
 [node name="Stele1" parent="." instance=ExtResource( 3 )]
 position = Vector2( 72, 232 )
@@ -78,3 +87,5 @@ position = Vector2( -8, 248 )
 [node name="LevelChange" parent="." instance=ExtResource( 6 )]
 position = Vector2( 456, 120 )
 next_level = "res://Levels/Art/ArtLevel.tscn"
+
+[node name="Node2D" type="Node2D" parent="."]

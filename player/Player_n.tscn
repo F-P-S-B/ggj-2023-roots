@@ -298,7 +298,7 @@ __meta__ = {
 
 [node name="InteractBox" type="Area2D" parent="."]
 visible = false
-collision_layer = 0
+collision_layer = 64
 collision_mask = 64
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="InteractBox"]
@@ -335,7 +335,7 @@ __meta__ = {
 [connection signal="area_entered" from="HitBox" to="." method="_on_HitBox_area_entered"]
 [connection signal="area_entered" from="InteractStele" to="." method="_on_InteractStele_area_entered"]
 [connection signal="area_exited" from="InteractStele" to="." method="_on_InteractStele_area_exited"]
-[connection signal="area_entered" from="InteractBox" to="." method="_on_Interactible_enter"]
-[connection signal="area_exited" from="InteractBox" to="." method="_on_Interactible_leave"]
+[connection signal="body_entered" from="InteractBox" to="." method="_on_Interactible_enter"]
+[connection signal="body_exited" from="InteractBox" to="." method="_on_Interactible_leave"]
 [connection signal="area_entered" from="InteractLevelChange" to="." method="_on_InteractLevelChange_area_entered"]
 [connection signal="area_exited" from="InteractLevelChange" to="." method="_on_InteractLevelChange_area_exited"]
