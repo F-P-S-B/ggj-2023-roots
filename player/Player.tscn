@@ -331,3 +331,5 @@ __meta__ = {
 [connection signal="area_exited" from="InteractStele" to="." method="_on_InteractStele_area_exited"]
 [connection signal="area_entered" from="InteractBox" to="." method="_on_Interactible_enter"]
 [connection signal="area_exited" from="InteractBox" to="." method="_on_Interactible_leave"]
+[connection signal="area_entered" from="InteractLevelChange" to="." method="_on_InteractLevelChange_area_entered"]
+[connection signal="area_exited" from="InteractLevelChange" to="." method="_on_InteractLevelChange_area_exited"]
