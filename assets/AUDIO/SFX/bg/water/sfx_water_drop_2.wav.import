@@ -1,0 +1,23 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/sfx_water_drop_2.wav-211ba53ea987fd52dae233b137ce72f0.sample"
+
+[deps]
+
+source_file="res://assets/AUDIO/SFX/bg/water/sfx_water_drop_2.wav"
+dest_files=[ "res://.import/sfx_water_drop_2.wav-211ba53ea987fd52dae233b137ce72f0.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=0
