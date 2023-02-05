@@ -28,14 +28,14 @@ export var super_jump_speed := 800
 export var super_jump_charge_duration := 120
 export var wall_jump_duration := 3
 export var wall_jump_horiz_speed := 300
-export var dash_speed := 780
+export var dash_speed := 1000
 export var dash_duration := 4
 export var dash_friction := 0.25
 
 export var gravity := 20
 export var gliding_gravity := 5
 export var sliding_speed := 35
-export var vert_friction := 0.025
+export var vert_friction := 0.0
 export var horiz_friction := 0.2
 export var max_speed := 150.0
 export var max_skill_count := 9
@@ -80,6 +80,7 @@ var can_wall_jump_timer := 0
 
 var can_open_menu := 0
 
+var is_dying := false
 onready var animation_sprite_squisher := $SpriteWrapper
 onready var animation_sprite := $SpriteWrapper/Sprite
 onready var animation_player := $AnimationPlayer
@@ -283,7 +284,8 @@ func lantern():
 	pass
 	
 func death():
-	pass
+	is_d
+	get_tree().reload_current_scene()
 
 """
 Animation
@@ -347,17 +349,14 @@ func _on_WallJumpRight_body_entered(_body : Node):
 	
 func _on_WallJumpRight_body_exited(_body : Node):
 	on_walls_right -= 1
-	print("cas4")
 	
-func _on_HitBox_body_entered(_body):
+func _on_HitBox_area_entered(_body):
 	death()
 	
-func _on_InteractStele_body_entered(_body : Node):
-	print("cas1")
+func _on_InteractStele_area_entered(_body : Node):
 	can_open_menu += 1
 
-func _on_InteractStele_body_exited(_body : Node):
-	print("cas2")
+func _on_InteractStele_area_exited(_body : Node):
 	can_open_menu -= 1
 
 func _on_Dash_Button_pressed():
@@ -374,7 +373,6 @@ func _on_Jump2_Button_pressed():
 	change_icon(Skills.JUMP2, "jump", jump2_button)
 
 func _on_Super_Jump_Button_pressed():
-	print("y")
 	enable_skill(Skills.SUPER_JUMP)
 	change_icon(Skills.SUPER_JUMP, "super_jump", super_jump_button)
 	
@@ -398,19 +396,6 @@ func _on_Glide_Button_pressed():
 func _on_Platform_Button_pressed():
 	enable_skill(Skills.RAISE_PLATFORM)
 	change_icon(Skills.RAISE_PLATFORM, "platform", platform_button)
-
-func _on_Interactible_enter(interactible: Node):
-	# Créer un Area2D sur le layer 7: Interactible
-	# Implémenter la fonction get_interactible_type sinon crash :3
-	# Faire ce que vous voulez dans le match
-	match interactible.get_interactible_type(): # str
-		"Test":
-			print("Test")
-		_:
-			pass
-
-func _on_Interactible_leave(interactible: Node):
-	pass
 
 
 """
@@ -461,8 +446,6 @@ func check_hover():
 	last_hovered = -1
 
 func toggle_menu():
-	if(can_open_menu > 0):
-		print("can_open_menu:",can_open_menu)
 	if Input.is_action_just_pressed("toggle_menu") and (show_menu or (can_open_menu > 0)):
 		show_menu = not show_menu
 	if show_menu:
