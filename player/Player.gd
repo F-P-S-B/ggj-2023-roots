@@ -33,7 +33,7 @@ export var dash_duration := 4
 export var dash_friction := 0.25
 
 export var gravity := 20
-export var gliding_gravity := 20
+export var gliding_gravity := 5
 export var sliding_speed := 35
 export var vert_friction := 0.025
 export var horiz_friction := 0.2
@@ -91,17 +91,31 @@ onready var glide_button := $"SkilltreeZFixer/Glide Button"
 onready var super_jump_button := $"SkilltreeZFixer/Super Jump Button"
 onready var platform_button := $"SkilltreeZFixer/Platform Button"
 onready var wall_jump_button := $"SkilltreeZFixer/Wall Jump Button"
-
+onready var text_label : RichTextLabel= $"SkilltreeZFixer/RichTextLabel"
+onready var description_title : Label= $"SkilltreeZFixer/RichTextLabel/Title"
+onready var description_label : Label= $"SkilltreeZFixer/RichTextLabel/Label"
+onready var description_image : TextureRect= $"SkilltreeZFixer/RichTextLabel/TextureRect"
+var last_hovered := -1
 """
 Main functions
 """
 func _ready():
 	skill_count = calculate_skill_count()
-	print("Skill count:", skill_count)
 	skilltree = get_node("SkilltreeZFixer")
+	
+	change_icon(Skills.DASH, "dash", dash_button)
+	change_icon(Skills.JUMP1, "jump", jump1_button)
+	change_icon(Skills.JUMP2, "jump", jump2_button)
+	change_icon(Skills.SUPER_JUMP, "super_jump", super_jump_button)
+	change_icon(Skills.MOVE, "move", move_button)
+	change_icon(Skills.LANTERN, "lantern", lantern_button)
+	change_icon(Skills.WALL_JUMP, "wall_jump", wall_jump_button)
+	change_icon(Skills.GLIDING, "glide", glide_button)
+	change_icon(Skills.RAISE_PLATFORM, "platform", platform_button)
 	
 
 func _physics_process(_delta):
+	check_hover()
 	if toggle_menu():
 		return
 	determine_direction()
@@ -313,19 +327,15 @@ Signals
 """
 func _on_WallJumpLeft_body_entered(_body : Node):
 	on_walls_left += 1
-	print("cas1")
 	
 func _on_WallJumpLeft_body_exited(_body : Node):
 	on_walls_left -= 1
-	print("cas2")
 	
 func _on_WallJumpRight_body_entered(_body : Node):
 	on_walls_right += 1
-	print("cas3")
 	
 func _on_WallJumpRight_body_exited(_body : Node):
 	on_walls_right -= 1
-	print("cas4")
 
 func _on_Dash_Button_pressed():
 	enable_skill(Skills.DASH)
@@ -347,7 +357,7 @@ func _on_Super_Jump_Button_pressed():
 
 func _on_Move_Button_pressed():
 	enable_skill(Skills.MOVE)
-	change_icon(Skills.MOVE, "walk", move_button)
+	change_icon(Skills.MOVE, "move", move_button)
 
 func _on_Lantern_Button_pressed():
 	enable_skill(Skills.LANTERN)
@@ -374,6 +384,44 @@ func calculate_skill_count():
 	for skill in enabled_skills:
 		count += int(enabled_skills[skill])
 	return count
+	
+func check_hover():
+	if not show_menu:
+		return
+	var buttons = [
+					dash_button, jump1_button, jump2_button, 
+					lantern_button, move_button, glide_button,
+					super_jump_button, platform_button, wall_jump_button
+				]
+	var names = [
+				"dash", "jump", "jump",
+				"lantern", "move", "glide",
+				"super_jump", "platform", "wall_jump"
+			]
+	var descriptions = [
+		"Allows you to dash forward by pressing shift",
+		"Grants you one extra jump",
+		"Grants you one extra jump",
+		"Guides your path through the darkness, costs 1800g, (TODO: implement currency)",
+		"Allows you to move while on the floor",
+		"Allows you to glide through the air, by holding space",
+		"Grants you a super jump, by holding ctrl for 2 seconds and then releasing",
+		"Summons a platform above your head",
+		"Grants you the ability to wall jump/slide"
+	]
+
+	for i in range(0, buttons.size()):
+		if buttons[i].is_hovered():
+			if i == last_hovered:
+				return
+			last_hovered = i
+			text_label.show()
+			description_image.texture = load("player/buttons/" + names[i] + ".png")
+			description_title.text = names[i].rsplit("_").join(" ").capitalize()
+			description_label.text = descriptions[i]
+			return
+	text_label.hide()
+	last_hovered = -1
 
 func toggle_menu():
 	if Input.is_action_just_pressed("toggle_menu"):
@@ -397,17 +445,16 @@ func enable_skill(skill: int): # type: Enum Skills
 	if enabled_skills[skill]:
 		enabled_skills[skill] = false
 		skill_count -= 1
-		print("Skill count:", skill_count)
 		return 
 	if skill_count >= max_skill_count:
 		return
 	enabled_skills[skill] = true
 	skill_count += 1
-	print("Skill count:", skill_count)
 
 func change_icon(skill: int, skillname: String, button: TextureButton):
 	if enabled_skills[skill]:
 		skillname += "_act"
-	button.texture_normal = load("player/boutons/" + skillname + ".png")
-	button.texture_pressed = load("player/boutons/" + skillname + ".png")
-	button.texture_hover = load("player/boutons/" + skillname + ".png")
+	var button_name = "player/buttons/" + skillname + ".png"
+	button.texture_normal = load(button_name)
+	button.texture_pressed = load(button_name)
+	button.texture_hover = load(button_name)
