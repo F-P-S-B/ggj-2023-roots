@@ -77,6 +77,9 @@ var on_walls_right := 0
 var on_walls_left := 0
 var can_wall_jump := 0 # 0 = cannot ; -1 = can left ; 1 = can right
 var can_wall_jump_timer := 0
+
+var can_open_menu := 0
+
 onready var animation_sprite_squisher := $SpriteWrapper
 onready var animation_sprite := $SpriteWrapper/Sprite
 onready var animation_player := $AnimationPlayer
@@ -348,6 +351,14 @@ func _on_WallJumpRight_body_exited(_body : Node):
 	
 func _on_HitBox_body_entered(_body):
 	death()
+	
+func _on_InteractStele_body_entered(_body : Node):
+	print("cas1")
+	can_open_menu += 1
+
+func _on_InteractStele_body_exited(_body : Node):
+	print("cas2")
+	can_open_menu -= 1
 
 func _on_Dash_Button_pressed():
 	enable_skill(Skills.DASH)
@@ -437,7 +448,9 @@ func check_hover():
 	last_hovered = -1
 
 func toggle_menu():
-	if Input.is_action_just_pressed("toggle_menu"):
+	if(can_open_menu > 0):
+		print("can_open_menu:",can_open_menu)
+	if Input.is_action_just_pressed("toggle_menu") and (show_menu or (can_open_menu > 0)):
 		show_menu = not show_menu
 	if show_menu:
 		skilltree.show()

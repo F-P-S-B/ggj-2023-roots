@@ -243,6 +243,9 @@ collision_mask = 8
 [node name="CollisionShape2D" type="CollisionShape2D" parent="WallJumpLeft"]
 position = Vector2( -5.4, 0 )
 shape = SubResource( 8 )
+__meta__ = {
+"_edit_lock_": true
+}
 
 [node name="WallJumpRight" type="Area2D" parent="."]
 position = Vector2( 0, 1 )
@@ -252,6 +255,9 @@ collision_mask = 8
 [node name="CollisionShape2D" type="CollisionShape2D" parent="WallJumpRight"]
 position = Vector2( 5.4, -1 )
 shape = SubResource( 8 )
+__meta__ = {
+"_edit_lock_": true
+}
 
 [node name="HitBox" type="Area2D" parent="."]
 collision_layer = 0
@@ -273,14 +279,6 @@ __meta__ = {
 "_edit_lock_": true
 }
 
-[node name="HitBox" type="Area2D" parent="."]
-collision_layer = 0
-collision_mask = 16
-
-[node name="InteractStele" type="Area2D" parent="."]
-collision_layer = 0
-collision_mask = 32
-
 [connection signal="pressed" from="SkilltreeZFixer/Super Jump Button" to="." method="_on_Super_Jump_Button_pressed"]
 [connection signal="pressed" from="SkilltreeZFixer/Jump1 Button" to="." method="_on_Jump1_Button_pressed"]
 [connection signal="pressed" from="SkilltreeZFixer/Jump2 Button" to="." method="_on_Jump2_Button_pressed"]
@@ -295,4 +293,5 @@ collision_mask = 32
 [connection signal="body_entered" from="WallJumpRight" to="." method="_on_WallJumpRight_body_entered"]
 [connection signal="body_exited" from="WallJumpRight" to="." method="_on_WallJumpRight_body_exited"]
 [connection signal="body_entered" from="HitBox" to="." method="_on_HitBox_body_entered"]
-[connection signal="body_entered" from="InteractStele" to="." method="_on_HitBox_body_entered"]
+[connection signal="body_entered" from="InteractStele" to="." method="_on_InteractStele_body_entered"]
+[connection signal="body_exited" from="InteractStele" to="." method="_on_InteractStele_body_exited"]
