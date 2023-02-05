@@ -26,6 +26,7 @@ export var jump_speed := 300
 export var air_jump_speed := 300
 export var super_jump_speed := 800
 export var super_jump_charge_duration := 120
+export var wall_jump_delay := 2
 export var wall_jump_duration := 3
 export var wall_jump_horiz_speed := 300
 export var dash_speed := 780
@@ -76,6 +77,7 @@ var skilltree : Node2D
 var on_walls_right := 0
 var on_walls_left := 0
 var can_wall_jump := 0 # 0 = cannot ; -1 = can left ; 1 = can right
+var can_wall_jump_timer := 0
 onready var animation_sprite_squisher := $SpriteWrapper
 onready var animation_sprite := $SpriteWrapper/Sprite
 onready var animation_player := $AnimationPlayer
@@ -192,31 +194,35 @@ func super_jump():
 	
 func sliding():	
 	if enabled_skills[Skills.WALL_JUMP]:
-		if Input.is_action_pressed("move_left") and Input.is_action_pressed("move_right"):
-			is_sliding = false
-			return
-		if ((on_walls_left > 0 and Input.is_action_pressed("move_left"))
-			or (on_walls_right > 0 and Input.is_action_pressed("move_right"))):
-			if enabled_skills[Skills.JUMP1] and enabled_skills[Skills.JUMP2]:
-				air_jumps = 1
-			if enabled_skills[Skills.DASH]:
-				dashes = 1
-			is_sliding = true
-			velocity.y = sliding_speed
-			return
-	is_sliding = false
+		if (on_walls_left == 0) and (on_walls_right == 0):
+			can_wall_jump = 0
+		if on_walls_left > 0:
+			can_wall_jump = -1
+			if Input.is_action_pressed("move_left"):
+				velocity.y = sliding_speed
+				if enabled_skills[Skills.JUMP1] and enabled_skills[Skills.JUMP2]:
+					air_jumps = 1
+				if enabled_skills[Skills.DASH]:
+					dashes = 1
+				return
+		if on_walls_right > 0:
+			can_wall_jump = 1
+			if Input.is_action_pressed("move_right"):
+				velocity.y = sliding_speed
+				if enabled_skills[Skills.JUMP1] and enabled_skills[Skills.JUMP2]:
+					air_jumps = 1
+				if enabled_skills[Skills.DASH]:
+					dashes = 1
 			
 func wall_jump():
 	if wall_jump_timer > 0:
 		wall_jump_timer -= 1
 		velocity = move_and_slide(velocity, Vector2.UP)
 		return true
-	if not is_sliding:
-		return false
-	if Input.is_action_just_pressed("jump"):
+	if (Input.is_action_just_pressed("jump")) and (can_wall_jump != 0):
 		wall_jump_timer = wall_jump_duration - 1
 		velocity.y -= jump_speed
-		velocity.x = (-direction) * wall_jump_horiz_speed
+		velocity.x = (-can_wall_jump) * wall_jump_horiz_speed
 		velocity = move_and_slide(velocity, Vector2.UP)
 		return true
 	

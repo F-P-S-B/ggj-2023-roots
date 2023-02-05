@@ -71,7 +71,7 @@ tracks/0/keys = {
 }
 
 [sub_resource type="RectangleShape2D" id=8]
-extents = Vector2( 0.5, 7 )
+extents = Vector2( 1.5, 7 )
 
 [node name="Player" type="KinematicBody2D"]
 position = Vector2( 264, 55 )
@@ -223,23 +223,16 @@ collision_layer = 0
 collision_mask = 8
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="WallJumpLeft"]
-position = Vector2( -4, 0 )
-shape = SubResource( 8 )
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="WallJumpLeft"]
-position = Vector2( -4, 0 )
+position = Vector2( -5.4, 0 )
 shape = SubResource( 8 )
 
 [node name="WallJumpRight" type="Area2D" parent="."]
+position = Vector2( 0, 1 )
 collision_layer = 0
 collision_mask = 8
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="WallJumpRight"]
-position = Vector2( 4, 0 )
-shape = SubResource( 8 )
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="WallJumpRight"]
-position = Vector2( 4, 0 )
+position = Vector2( 5.4, -1 )
 shape = SubResource( 8 )
 
 [connection signal="pressed" from="SkilltreeZFixer/Dash Button" to="." method="_on_Dash_Button_pressed"]
