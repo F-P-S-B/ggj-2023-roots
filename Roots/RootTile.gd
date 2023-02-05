@@ -5,6 +5,10 @@ var next : KinematicBody2D = null
 var platform : KinematicBody2D = null
 var number
 const TILE_SIZE = 16
+enum Dir {
+	PRED,
+	NEXT
+}
 
 """
 Test vars
@@ -36,34 +40,72 @@ func _physics_process(_delta):
 		if !pressed_pred:
 			pressed_pred = true
 			if is_first():
-				move_pred(Vector2.UP * TILE_SIZE)
+				move()
 		return
 	pressed_pred = false
 	if Input.is_key_pressed(KEY_BACKSPACE):
 		if !pressed_next:
 			pressed_next = true
 			if is_first():
-				move_next(Vector2.UP * TILE_SIZE)
+				move_next()
 		return
 	pressed_next = false
 
 """
 Move functions
 """
+func move():
+	if ((!is_empty(pred) and pred.position.y == position.y) 
+	 && (!is_empty(next) and next.position.y == position.y)):
+		return false
+	if is_first() or pred.position.x > position.x or (!is_empty(next) and next.position.x < position.x):
+		#bouger vers pred
+		return move_pred()
+	#bouger vers next
+	return move_next()
 
-func move_pred(move: Vector2):
-	var r := find_first()
-	if !can_move_pred(r, move):
-		return false 
-	move_pred_aux(r, r.position + move)
+func can_move_up_pred():
+	var platform_can_move := true
+	if platform != null:
+		platform_can_move = platform.test_move(Transform2D(0.0, platform.position), Vector2.UP * 8)
+	if is_first():
+		return platform_can_move
+	return platform_can_move && pred.can_move_up_pred()
+		
+func move_up_pred():
+	position += Vector2.UP *8
+	if self.is_first():
+		return
+	pred.move_up_pred()
+
+func move_pred():
+	if !can_move_up_pred() or (!is_last() and !can_move_pred(next, position - next.position)):
+		return false
+	var pos := position 
+	move_up_pred()
+	move_pred_aux(next, pos)
 
 
-func move_next(move: Vector2):
-	var r := find_last()
-	if !can_move_next(r, move):
-		return false 
-	move_next_aux(r, r.position + move)
+func can_move_up_next():
+	var platform_can_move := true
+	if platform != null:
+		platform_can_move = platform.test_move(Transform2D(0.0, platform.position), Vector2.UP * 8)
+	if is_first():
+		return platform_can_move
+	return platform_can_move && next.can_move_up_next()
+		
+func move_up_next():
+	position += Vector2.UP *8
+	if is_last():
+		return
+	next.move_up_next()
 
+func move_next():
+	if !can_move_up_next() or (!is_first() and !can_move_next(pred, position - pred.position)):
+		return false
+	var pos := position 
+	move_up_next()
+	move_next_aux(next, pos)
 
 
 """
