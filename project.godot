@@ -78,6 +78,7 @@ super_jump={
 2d_physics/layer_5="DeathZone"
 2d_physics/layer_6="InteractionStele"
 2d_physics/layer_7="Interactible"
+2d_physics/layer_8="LevelChange"
 
 [physics]
 

@@ -115,6 +115,7 @@ var drop_count := 0
 Main functions
 """
 func _ready():
+	is_dying = false
 	skill_count = calculate_skill_count()
 	skilltree = get_node("SkilltreeZFixer")
 	
@@ -136,6 +137,9 @@ func _ready():
 func _physics_process(_delta):
 	play_sound()
 	check_hover()
+	if is_dying:
+		#animation de mort, jsp comment ca marche
+		return
 	if toggle_menu():
 		return
 	determine_direction()
