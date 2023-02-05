@@ -399,6 +399,19 @@ func _on_Platform_Button_pressed():
 	enable_skill(Skills.RAISE_PLATFORM)
 	change_icon(Skills.RAISE_PLATFORM, "platform", platform_button)
 
+func _on_Interactible_enter(interactible: Node):
+	# Créer un Area2D sur le layer 7: Interactible
+	# Implémenter la fonction get_interactible_type sinon crash :3
+	# Faire ce que vous voulez dans le match
+	match interactible.get_interactible_type(): # str
+		"Test":
+			print("Test")
+		_:
+			pass
+
+func _on_Interactible_leave(interactible: Node):
+	pass
+
 
 """
 Utilities
