@@ -1,5 +1,5 @@
 extends KinematicBody2D
-var platform_path := ""
+export var platform_path := ""
 var pred : KinematicBody2D = null
 var next : KinematicBody2D = null
 var platform : KinematicBody2D = null
