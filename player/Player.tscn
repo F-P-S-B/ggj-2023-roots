@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=2]
+[gd_scene load_steps=21 format=2]
 
 [ext_resource path="res://player/buttons/dash.png" type="Texture" id=1]
 [ext_resource path="res://player/Player.gd" type="Script" id=2]
@@ -80,6 +80,8 @@ tracks/0/keys = {
 
 [sub_resource type="RectangleShape2D" id=8]
 extents = Vector2( 1.5, 7 )
+
+[sub_resource type="RectangleShape2D" id=10]
 
 [sub_resource type="RectangleShape2D" id=9]
 extents = Vector2( 10, 9 )
@@ -250,6 +252,9 @@ collision_mask = 8
 [node name="CollisionShape2D" type="CollisionShape2D" parent="WallJumpLeft"]
 position = Vector2( -5.4, 0 )
 shape = SubResource( 8 )
+__meta__ = {
+"_edit_lock_": true
+}
 
 [node name="WallJumpRight" type="Area2D" parent="."]
 visible = false
@@ -260,6 +265,9 @@ collision_mask = 8
 [node name="CollisionShape2D" type="CollisionShape2D" parent="WallJumpRight"]
 position = Vector2( 5.4, -1 )
 shape = SubResource( 8 )
+__meta__ = {
+"_edit_lock_": true
+}
 
 [node name="HitBox" type="Area2D" parent="."]
 visible = false
@@ -273,25 +281,14 @@ __meta__ = {
 }
 
 [node name="InteractStele" type="Area2D" parent="."]
-visible = false
 collision_layer = 0
 collision_mask = 32
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="InteractStele"]
-shape = SubResource( 1 )
-__meta__ = {
-"_edit_lock_": true
-}
-
-[node name="HitBox" type="Area2D" parent="."]
-collision_layer = 0
-collision_mask = 16
-
-[node name="InteractStele" type="Area2D" parent="."]
-collision_layer = 0
-collision_mask = 32
+shape = SubResource( 10 )
 
 [node name="InteractBox" type="Area2D" parent="."]
+visible = false
 collision_layer = 0
 collision_mask = 64
 
@@ -312,7 +309,8 @@ shape = SubResource( 9 )
 [connection signal="body_exited" from="WallJumpLeft" to="." method="_on_WallJumpLeft_body_exited"]
 [connection signal="body_entered" from="WallJumpRight" to="." method="_on_WallJumpRight_body_entered"]
 [connection signal="body_exited" from="WallJumpRight" to="." method="_on_WallJumpRight_body_exited"]
-[connection signal="body_entered" from="HitBox" to="." method="_on_HitBox_body_entered"]
-[connection signal="body_entered" from="InteractStele" to="." method="_on_HitBox_body_entered"]
+[connection signal="area_entered" from="HitBox" to="." method="_on_HitBox_area_entered"]
+[connection signal="area_entered" from="InteractStele" to="." method="_on_InteractStele_area_entered"]
+[connection signal="area_exited" from="InteractStele" to="." method="_on_InteractStele_area_exited"]
 [connection signal="area_entered" from="InteractBox" to="." method="_on_Interactible_enter"]
 [connection signal="area_exited" from="InteractBox" to="." method="_on_Interactible_leave"]

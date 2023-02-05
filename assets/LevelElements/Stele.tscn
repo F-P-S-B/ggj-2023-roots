@@ -1,12 +1,16 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://icon.png" type="Texture" id=1]
 
 [sub_resource type="RectangleShape2D" id=1]
 
 [node name="Stele" type="Area2D"]
+scale = Vector2( 1.28484, 1 )
 collision_layer = 32
-collision_mask = 0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+scale = Vector2( 1, 1.04393 )
 shape = SubResource( 1 )
 
 [node name="Sprite" type="Sprite" parent="."]
+texture = ExtResource( 1 )

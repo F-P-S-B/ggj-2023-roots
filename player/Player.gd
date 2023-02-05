@@ -28,14 +28,14 @@ export var super_jump_speed := 800
 export var super_jump_charge_duration := 120
 export var wall_jump_duration := 3
 export var wall_jump_horiz_speed := 300
-export var dash_speed := 780
+export var dash_speed := 1000
 export var dash_duration := 4
 export var dash_friction := 0.25
 
 export var gravity := 20
 export var gliding_gravity := 5
 export var sliding_speed := 35
-export var vert_friction := 0.025
+export var vert_friction := 0.0
 export var horiz_friction := 0.2
 export var max_speed := 150.0
 export var max_skill_count := 9
@@ -77,6 +77,10 @@ var on_walls_right := 0
 var on_walls_left := 0
 var can_wall_jump := 0 # 0 = cannot ; -1 = can left ; 1 = can right
 var can_wall_jump_timer := 0
+
+var can_open_menu := 0
+
+var is_dying := false
 onready var animation_sprite_squisher := $SpriteWrapper
 onready var animation_sprite := $SpriteWrapper/Sprite
 onready var animation_player := $AnimationPlayer
@@ -97,6 +101,16 @@ onready var description_title : Label= $"SkilltreeZFixer/RichTextLabel/Title"
 onready var description_label : Label= $"SkilltreeZFixer/RichTextLabel/Label"
 onready var description_image : TextureRect= $"SkilltreeZFixer/RichTextLabel/TextureRect"
 var last_hovered := -1
+
+# Sons
+var t : AudioStreamPlayer2D
+var sound_player_list := [t]
+var current_player_index := 0
+var bird_timer := 0
+var bird_count := 0
+var drop_timer := 0
+var drop_count := 0
+
 """
 Main functions
 """
@@ -114,8 +128,13 @@ func _ready():
 	change_icon(Skills.GLIDING, "glide", glide_button)
 	change_icon(Skills.RAISE_PLATFORM, "platform", platform_button)
 	
+	sound_player_list[0] = AudioStreamPlayer2D.new()
+	for __ in range(1, 60):
+		sound_player_list.append(AudioStreamPlayer2D.new())
+	
 
 func _physics_process(_delta):
+	play_sound()
 	check_hover()
 	if toggle_menu():
 		return
@@ -280,7 +299,8 @@ func lantern():
 	pass
 	
 func death():
-	pass
+	is_dying = true
+	get_tree().reload_current_scene()
 
 """
 Animation
@@ -329,6 +349,31 @@ func animation_decide():
 		animation_player.play("Idle")
 		return
 	animation_player.play("Jump")
+"""
+Sounds
+"""
+func play_sound():
+	var player: AudioStreamPlayer2D = sound_player_list[current_player_index]
+	if bird_timer <= 0:
+		if bird_count > 0:
+			# TODO: play
+			update_player_index()
+			bird_timer = int(rand_range(1, 2) * 60)
+			bird_count -= 1
+		else:
+			bird_count = int(rand_range(0, 2))
+			bird_timer = int(rand_range(30, 120) * 60)
+			
+		
+	if drop_timer <= 0:
+		if drop_count > 0:
+			# TODO: play
+			update_player_index()
+			drop_timer = int(rand_range(30, 90))
+			drop_count -= 1
+		else:
+			drop_count = int(rand_range(0, 5))
+			drop_timer = int(rand_range(30, 100) * 60)
 
 """
 Signals
@@ -344,10 +389,15 @@ func _on_WallJumpRight_body_entered(_body : Node):
 	
 func _on_WallJumpRight_body_exited(_body : Node):
 	on_walls_right -= 1
-	print("cas4")
 	
-func _on_HitBox_body_entered(_body):
+func _on_HitBox_area_entered(_body):
 	death()
+	
+func _on_InteractStele_area_entered(_body : Node):
+	can_open_menu += 1
+
+func _on_InteractStele_area_exited(_body : Node):
+	can_open_menu -= 1
 
 func _on_Dash_Button_pressed():
 	enable_skill(Skills.DASH)
@@ -363,7 +413,6 @@ func _on_Jump2_Button_pressed():
 	change_icon(Skills.JUMP2, "jump", jump2_button)
 
 func _on_Super_Jump_Button_pressed():
-	print("y")
 	enable_skill(Skills.SUPER_JUMP)
 	change_icon(Skills.SUPER_JUMP, "super_jump", super_jump_button)
 	
@@ -387,19 +436,6 @@ func _on_Glide_Button_pressed():
 func _on_Platform_Button_pressed():
 	enable_skill(Skills.RAISE_PLATFORM)
 	change_icon(Skills.RAISE_PLATFORM, "platform", platform_button)
-
-func _on_Interactible_enter(interactible: Node):
-	# Créer un Area2D sur le layer 7: Interactible
-	# Implémenter la fonction get_interactible_type sinon crash :3
-	# Faire ce que vous voulez dans le match
-	match interactible.get_interactible_type(): # str
-		"Test":
-			print("Test")
-		_:
-			pass
-
-func _on_Interactible_leave(interactible: Node):
-	pass
 
 
 """
@@ -450,7 +486,7 @@ func check_hover():
 	last_hovered = -1
 
 func toggle_menu():
-	if Input.is_action_just_pressed("toggle_menu"):
+	if Input.is_action_just_pressed("toggle_menu") and (show_menu or (can_open_menu > 0)):
 		show_menu = not show_menu
 	if show_menu:
 		skilltree.show()
@@ -484,3 +520,7 @@ func change_icon(skill: int, skillname: String, button: TextureButton):
 	button.texture_normal = load(button_name)
 	button.texture_pressed = load(button_name)
 	button.texture_hover = load(button_name)
+	
+func update_player_index():
+	current_player_index = (current_player_index + 1)%60
+
