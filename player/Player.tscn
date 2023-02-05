@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=2]
+[gd_scene load_steps=22 format=2]
 
 [ext_resource path="res://player/buttons/dash.png" type="Texture" id=1]
 [ext_resource path="res://player/Player.gd" type="Script" id=2]
@@ -86,13 +86,15 @@ extents = Vector2( 1.5, 7 )
 [sub_resource type="RectangleShape2D" id=9]
 extents = Vector2( 10, 9 )
 
+[sub_resource type="RectangleShape2D" id=11]
+extents = Vector2( 8, 4 )
+
 [node name="Player" type="KinematicBody2D"]
 position = Vector2( 264, 55 )
 collision_mask = 4
 script = ExtResource( 2 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-visible = false
 shape = SubResource( 1 )
 __meta__ = {
 "_edit_lock_": true
@@ -125,7 +127,6 @@ texture = ExtResource( 11 )
 margin_top = -30.0
 margin_right = 16.0
 margin_bottom = -14.0
-hint_tooltip = "Ceci est un test"
 texture_normal = ExtResource( 3 )
 texture_pressed = ExtResource( 3 )
 texture_hover = ExtResource( 3 )
@@ -135,7 +136,6 @@ margin_left = 15.0
 margin_top = -15.0
 margin_right = 31.0
 margin_bottom = 1.0
-hint_tooltip = "Ceci est un test"
 texture_normal = ExtResource( 9 )
 texture_pressed = ExtResource( 9 )
 texture_hover = ExtResource( 9 )
@@ -144,7 +144,6 @@ texture_hover = ExtResource( 9 )
 margin_left = 30.0
 margin_right = 46.0
 margin_bottom = 16.0
-hint_tooltip = "Ceci est un test"
 texture_normal = ExtResource( 9 )
 texture_pressed = ExtResource( 9 )
 texture_hover = ExtResource( 9 )
@@ -154,7 +153,6 @@ margin_left = 15.0
 margin_top = 15.0
 margin_right = 31.0
 margin_bottom = 31.0
-hint_tooltip = "Ceci est un test"
 texture_normal = ExtResource( 8 )
 texture_pressed = ExtResource( 8 )
 texture_hover = ExtResource( 8 )
@@ -162,7 +160,6 @@ texture_hover = ExtResource( 8 )
 [node name="Move Button" type="TextureButton" parent="SkilltreeZFixer"]
 margin_right = 16.0
 margin_bottom = 16.0
-hint_tooltip = "Ceci est un test"
 texture_normal = ExtResource( 4 )
 texture_pressed = ExtResource( 4 )
 texture_hover = ExtResource( 4 )
@@ -173,7 +170,6 @@ margin_top = -15.0
 margin_right = 1.0
 margin_bottom = 1.0
 rect_pivot_offset = Vector2( -298.112, 575.868 )
-hint_tooltip = "Ceci est un test"
 texture_normal = ExtResource( 10 )
 texture_pressed = ExtResource( 10 )
 texture_hover = ExtResource( 10 )
@@ -182,7 +178,6 @@ texture_hover = ExtResource( 10 )
 margin_left = -30.0
 margin_right = -14.0
 margin_bottom = 16.0
-hint_tooltip = "Ceci est un test"
 texture_normal = ExtResource( 1 )
 texture_pressed = ExtResource( 1 )
 texture_hover = ExtResource( 1 )
@@ -193,7 +188,6 @@ margin_top = 15.0
 margin_right = 1.00004
 margin_bottom = 31.0
 rect_pivot_offset = Vector2( -298.112, 575.868 )
-hint_tooltip = "Ceci est un test"
 texture_normal = ExtResource( 5 )
 texture_pressed = ExtResource( 5 )
 texture_hover = ExtResource( 5 )
@@ -202,7 +196,6 @@ texture_hover = ExtResource( 5 )
 margin_top = 30.0
 margin_right = 16.0
 margin_bottom = 46.0
-hint_tooltip = "Ceci est un test"
 texture_normal = ExtResource( 7 )
 texture_pressed = ExtResource( 7 )
 texture_hover = ExtResource( 7 )
@@ -280,6 +273,7 @@ __meta__ = {
 }
 
 [node name="InteractStele" type="Area2D" parent="."]
+visible = false
 collision_layer = 0
 collision_mask = 32
 
@@ -302,6 +296,7 @@ __meta__ = {
 }
 
 [node name="InteractLevelChange" type="Area2D" parent="."]
+visible = false
 collision_layer = 128
 collision_mask = 128
 
@@ -311,6 +306,12 @@ shape = SubResource( 9 )
 __meta__ = {
 "_edit_lock_": true
 }
+
+[node name="TakeLadder" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="TakeLadder"]
+position = Vector2( 0, -4 )
+shape = SubResource( 11 )
 
 [connection signal="pressed" from="SkilltreeZFixer/Super Jump Button" to="." method="_on_Super_Jump_Button_pressed"]
 [connection signal="pressed" from="SkilltreeZFixer/Jump1 Button" to="." method="_on_Jump1_Button_pressed"]

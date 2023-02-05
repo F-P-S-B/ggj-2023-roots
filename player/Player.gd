@@ -81,12 +81,12 @@ var on_walls_left := 0
 var can_wall_jump := 0 # 0 = cannot ; -1 = can left ; 1 = can right
 var can_wall_jump_timer := 0
 
-var pre_interact_timer := -1
-var post_interact_timer := -1
+var pre_interact_timer := 0
+var post_interact_timer := 0
 
 var can_open_menu := 0
 
-var death_timer := -1
+var death_timer := 0
 onready var animation_sprite_squisher := $SpriteWrapper
 onready var animation_sprite := $SpriteWrapper/Sprite
 onready var animation_player := $AnimationPlayer
@@ -112,7 +112,9 @@ onready var description_image : TextureRect= $"SkilltreeZFixer/RichTextLabel/Tex
 var last_hovered := -1
 
 # Sons
-var t : AudioStreamPlayer2D
+var wind_player : AudioStreamPlayer
+var wind_timer := 0
+var t : AudioStreamPlayer
 var sound_player_list := [t]
 var current_player_index := 0
 var bird_timer := 0
@@ -124,7 +126,7 @@ var drop_count := 0
 Main functions
 """
 func _ready():
-	death_timer = -1
+	death_timer = 0
 	skill_count = calculate_skill_count()
 	skilltree = get_node("SkilltreeZFixer")
 	
@@ -140,9 +142,16 @@ func _ready():
 	change_icon(Skills.GLIDING, "glide", glide_button)
 	change_icon(Skills.RAISE_PLATFORM, "platform", platform_button)
 	
-	sound_player_list[0] = AudioStreamPlayer2D.new()
-	for __ in range(1, 60):
-		sound_player_list.append(AudioStreamPlayer2D.new())
+	wind_player = AudioStreamPlayer.new()
+	wind_player.set_stream(preload("res://assets/AUDIO/SFX/bg/sfx_wind_bg.wav"))
+	add_child(wind_player)
+	sound_player_list[0] = AudioStreamPlayer.new()
+	add_child(sound_player_list[0])
+
+	for i in range(1, 60):
+		var a = AudioStreamPlayer.new()
+		sound_player_list.append(a)
+		add_child(a)
 	
 
 func _physics_process(_delta):
@@ -154,7 +163,7 @@ func _physics_process(_delta):
 		return
 	if post_interact_animation():
 		#animation
-		return	
+		return
 	if toggle_menu():
 		return
 	determine_direction()
@@ -322,10 +331,10 @@ func lantern():
 	pass
 
 func death():
-	if death_timer == -1 :
+	if death_timer == 0 :
 		return false
 	death_timer -= 1
-	if death_timer == -1:
+	if death_timer == 0:
 		get_tree().reload_current_scene()
 	return true
 
@@ -334,9 +343,10 @@ func roots_interact():
 	# et implémenter la méthode get_interactible_type qui renvoie un str: le type
 	# de l'interactible
 	# Après faire ce que vous voulez dans le match
-	if Input.is_action_just_pressed("interact") and is_on_floor():
-		if len(interactibles_within_reach) == 0:
-			return
+	if (pre_interact_timer == 0) and (post_interact_timer == 0):
+		return
+		
+	if (pre_interact_timer == 1):
 		var closest = interactibles_within_reach[0]
 		var closests_distance_squared = (
 			closest.global_position - global_position
@@ -349,24 +359,11 @@ func roots_interact():
 				return
 			closests_distance_squared = distance_squared
 			closest = interactible
-		move_roots(closest)
-		
-func move_roots(root):
-	pre_interact_timer = pre_interact_animation_length
-	
-func pre_interact_animation():
-	if(pre_interact_timer == -1):
-		return false
-	pre_interact_timer -= 1
-	if(pre_interact_timer == -1):
-		post_interact_timer = post_interact_animation_length
-	return true
-	
-func post_interact_animation():
-	if(post_interact_timer == -1):
-		return false
-	post_interact_timer -= 1
-	return true
+			closest.move()
+	if Input.is_action_just_pressed("interact") and is_on_floor():
+		if len(interactibles_within_reach) == 0:
+			return
+		pre_interact_timer = pre_interact_animation_length
 
 """
 Animation
@@ -415,31 +412,62 @@ func animation_decide():
 		animation_player.play("Idle")
 		return
 	animation_player.play("Jump")
+	
+func pre_interact_animation():
+	if(pre_interact_timer == 0):
+		return false
+	pre_interact_timer -= 1
+	if(pre_interact_timer == 0):
+		post_interact_timer = post_interact_animation_length
+	return true
+	
+func post_interact_animation():
+	if(post_interact_timer == 0):
+		return false
+	post_interact_timer -= 1
+	return true
+	
 """
 Sounds
 """
 func play_sound():
-	var player: AudioStreamPlayer2D = sound_player_list[current_player_index]
+	if wind_timer <= 0:
+		wind_timer = 65*60 + int(rand_range(5, 10) * 60)
+		wind_player.set_volume_db(-20)
+		wind_player.play()
+	var player: AudioStreamPlayer = sound_player_list[current_player_index]
 	if bird_timer <= 0:
 		if bird_count > 0:
-			# TODO: play
+			var n:= randi() % 13 +1
+			player.set_stream(load("res://assets/AUDIO/SFX/bg/birds/sfx_bird_" + str(n) + ".wav"))
+			player.play()
 			update_player_index()
 			bird_timer = int(rand_range(1, 2) * 60)
 			bird_count -= 1
 		else:
+			
 			bird_count = int(rand_range(0, 2))
 			bird_timer = int(rand_range(30, 120) * 60)
 			
+	player = sound_player_list[current_player_index]
 		
 	if drop_timer <= 0:
 		if drop_count > 0:
-			# TODO: play
+			var n:= randi() % 4 +1
+			print("lfg")
+			player.set_stream(load("res://assets/AUDIO/SFX/bg/water/sfx_water_" + str(n) + ".wav"))
+			player.set_volume_db(20)
+			player.play()
+			update_player_index()
 			update_player_index()
 			drop_timer = int(rand_range(30, 90))
 			drop_count -= 1
 		else:
 			drop_count = int(rand_range(0, 5))
 			drop_timer = int(rand_range(30, 100) * 60)
+	wind_timer -= 1
+	bird_timer -= 1
+	drop_timer -= 1
 
 """
 Signals
