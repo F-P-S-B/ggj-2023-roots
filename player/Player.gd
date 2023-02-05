@@ -81,12 +81,12 @@ var on_walls_left := 0
 var can_wall_jump := 0 # 0 = cannot ; -1 = can left ; 1 = can right
 var can_wall_jump_timer := 0
 
-var pre_interact_timer := -1
-var post_interact_timer := -1
+var pre_interact_timer := 0
+var post_interact_timer := 0
 
 var can_open_menu := 0
 
-var death_timer := -1
+var death_timer := 0
 onready var animation_sprite_squisher := $SpriteWrapper
 onready var animation_sprite := $SpriteWrapper/Sprite
 onready var animation_player := $AnimationPlayer
@@ -124,7 +124,7 @@ var drop_count := 0
 Main functions
 """
 func _ready():
-	death_timer = -1
+	death_timer = 0
 	skill_count = calculate_skill_count()
 	skilltree = get_node("SkilltreeZFixer")
 	
@@ -322,10 +322,10 @@ func lantern():
 	pass
 
 func death():
-	if death_timer == -1 :
+	if death_timer == 0 :
 		return false
 	death_timer -= 1
-	if death_timer == -1:
+	if death_timer == 0:
 		get_tree().reload_current_scene()
 	return true
 
@@ -334,9 +334,10 @@ func roots_interact():
 	# et implémenter la méthode get_interactible_type qui renvoie un str: le type
 	# de l'interactible
 	# Après faire ce que vous voulez dans le match
-	if Input.is_action_just_pressed("interact") and is_on_floor():
-		if len(interactibles_within_reach) == 0:
-			return
+	if (pre_interact_timer == 0) and (post_interact_timer == 0):
+		return
+		
+	if (pre_interact_timer == 1):
 		var closest = interactibles_within_reach[0]
 		var closests_distance_squared = (
 			closest.global_position - global_position
@@ -349,24 +350,11 @@ func roots_interact():
 				return
 			closests_distance_squared = distance_squared
 			closest = interactible
-		move_roots(closest)
-		
-func move_roots(root):
-	pre_interact_timer = pre_interact_animation_length
-	
-func pre_interact_animation():
-	if(pre_interact_timer == -1):
-		return false
-	pre_interact_timer -= 1
-	if(pre_interact_timer == -1):
-		post_interact_timer = post_interact_animation_length
-	return true
-	
-func post_interact_animation():
-	if(post_interact_timer == -1):
-		return false
-	post_interact_timer -= 1
-	return true
+			closest.move()
+	if Input.is_action_just_pressed("interact") and is_on_floor():
+		if len(interactibles_within_reach) == 0:
+			return
+		pre_interact_timer = pre_interact_animation_length
 
 """
 Animation
@@ -415,6 +403,21 @@ func animation_decide():
 		animation_player.play("Idle")
 		return
 	animation_player.play("Jump")
+	
+func pre_interact_animation():
+	if(pre_interact_timer == 0):
+		return false
+	pre_interact_timer -= 1
+	if(pre_interact_timer == 0):
+		post_interact_timer = post_interact_animation_length
+	return true
+	
+func post_interact_animation():
+	if(post_interact_timer == 0):
+		return false
+	post_interact_timer -= 1
+	return true
+	
 """
 Sounds
 """
