@@ -290,12 +290,12 @@ __meta__ = {
 "_edit_lock_": true
 }
 
-[node name="InteractBox" type="Area2D" parent="."]
+[node name="InteractRoots" type="Area2D" parent="."]
 visible = false
 collision_layer = 0
 collision_mask = 64
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="InteractBox"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="InteractRoots"]
 position = Vector2( 4, -1 )
 shape = SubResource( 9 )
 __meta__ = {
@@ -303,7 +303,7 @@ __meta__ = {
 }
 
 [node name="InteractLevelChange" type="Area2D" parent="."]
-collision_layer = 0
+collision_layer = 128
 collision_mask = 128
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="InteractLevelChange"]
@@ -329,7 +329,5 @@ __meta__ = {
 [connection signal="area_entered" from="HitBox" to="." method="_on_HitBox_area_entered"]
 [connection signal="area_entered" from="InteractStele" to="." method="_on_InteractStele_area_entered"]
 [connection signal="area_exited" from="InteractStele" to="." method="_on_InteractStele_area_exited"]
-[connection signal="area_entered" from="InteractBox" to="." method="_on_Interactible_enter"]
-[connection signal="area_exited" from="InteractBox" to="." method="_on_Interactible_leave"]
-[connection signal="area_entered" from="InteractLevelChange" to="." method="_on_InteractLevelChange_area_entered"]
-[connection signal="area_exited" from="InteractLevelChange" to="." method="_on_InteractLevelChange_area_exited"]
+[connection signal="area_entered" from="InteractRoots" to="." method="_on_Interactible_enter"]
+[connection signal="area_exited" from="InteractRoots" to="." method="_on_Interactible_leave"]

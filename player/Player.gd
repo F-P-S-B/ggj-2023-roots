@@ -38,6 +38,7 @@ export var sliding_speed := 35
 export var vert_friction := 0.0
 export var horiz_friction := 0.2
 export var max_speed := 150.0
+export var death_animation_length := 10
 
 const animation_unsquish_rate := 0.2
 const animation_jump_squish := Vector2(0.55, 1.6)
@@ -46,6 +47,8 @@ const animation_land_min_squish_velocity := 20.0
 const animation_land_max_squish_velocity := 600.0
 const animation_dash_squish := Vector2(2.0, 0.7)
 const animation_run_threshold := 50.0
+const pre_interact_animation_length := 3
+const post_interact_animation_length := 3
 
 export var enabled_skills := {
 	Skills.MOVE : false,
@@ -78,9 +81,12 @@ var on_walls_left := 0
 var can_wall_jump := 0 # 0 = cannot ; -1 = can left ; 1 = can right
 var can_wall_jump_timer := 0
 
+var pre_interact_timer := -1
+var post_interact_timer := -1
+
 var can_open_menu := 0
 
-var is_dying := false
+var death_timer := -1
 onready var animation_sprite_squisher := $SpriteWrapper
 onready var animation_sprite := $SpriteWrapper/Sprite
 onready var animation_player := $AnimationPlayer
@@ -118,7 +124,7 @@ var drop_count := 0
 Main functions
 """
 func _ready():
-	is_dying = false
+	death_timer = -1
 	skill_count = calculate_skill_count()
 	skilltree = get_node("SkilltreeZFixer")
 	
@@ -142,9 +148,20 @@ func _ready():
 func _physics_process(_delta):
 	play_sound()
 	check_hover()
-	if is_dying:
-		#animation de mort, jsp comment ca marche
+	if Input.is_action_just_pressed("reset"):
+		death_timer = death_animation_length
 		return
+	if death_timer > 0:
+		#animation de mort, jsp comment ca marche
+		death_timer -= 1
+		return
+	if death_timer == 0:
+		get_tree().reload_current_scene()
+	if pre_interact_animation():
+		return
+	if post_interact_animation():
+		#animation
+		return	
 	if toggle_menu():
 		return
 	determine_direction()
@@ -308,33 +325,46 @@ func lantern():
 	pass
 	
 func death():
-	is_dying = true
-	get_tree().reload_current_scene()
+	death_timer = death_animation_length
 
-func interact():
+func roots_interact():
 	# Il faut créer un node qui a un Area2D sur le layer 7 (Interactibles)
 	# et implémenter la méthode get_interactible_type qui renvoie un str: le type
 	# de l'interactible
 	# Après faire ce que vous voulez dans le match
-	if len(interactibles_within_reach) == 0:
-		return
-	var closest = interactibles_within_reach[0]
-	var closests_distance_squared = (
-		closest.global_position - global_position
-	).length_squared()
-	for interactible in interactibles_within_reach:
-		var distance_squared = (
-			interactible.global_position - global_position
-		).length_squared()
-		if distance_squared >= closests_distance_squared:
+	if Input.is_action_just_pressed("interact"):
+		if len(interactibles_within_reach) == 0:
 			return
-		closests_distance_squared = distance_squared
-		closest = interactible
-	match closest.get_interactible_type(): # str
-		"Test":
-			print("Test")
-		_:
-			pass
+		var closest = interactibles_within_reach[0]
+		var closests_distance_squared = (
+			closest.global_position - global_position
+		).length_squared()
+		for interactible in interactibles_within_reach:
+			var distance_squared = (
+				interactible.global_position - global_position
+			).length_squared()
+			if distance_squared >= closests_distance_squared:
+				return
+			closests_distance_squared = distance_squared
+			closest = interactible
+		move_roots(closest)
+		
+func move_roots(root):
+	pre_interact_timer = pre_interact_animation_length
+	
+func pre_interact_animation():
+	if(pre_interact_timer == -1):
+		return false
+	pre_interact_timer -= 1
+	if(pre_interact_timer == -1):
+		post_interact_timer = post_interact_animation_length
+	return true
+	
+func post_interact_animation():
+	if(post_interact_timer == -1):
+		return false
+	post_interact_timer -= 1
+	return true
 
 """
 Animation
