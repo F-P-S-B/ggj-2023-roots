@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=2]
 
-[ext_resource path="res://player/Player.tscn" type="PackedScene" id=1]
+[ext_resource path="res://player/Player_n.tscn" type="PackedScene" id=1]
 [ext_resource path="res://assets/LevelElements/Tilemaps/TilesConcrete.tscn" type="PackedScene" id=2]
 
 [node name="ArtLevel" type="Node2D"]
