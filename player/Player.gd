@@ -26,19 +26,20 @@ export var jump_speed := 300
 export var air_jump_speed := 300
 export var super_jump_speed := 800
 export var super_jump_charge_duration := 120
-export var wall_jump_duration := 5
-export var wall_jump_speed := 200
+export var wall_jump_delay := 2
+export var wall_jump_duration := 3
+export var wall_jump_horiz_speed := 300
 export var dash_speed := 780
 export var dash_duration := 4
 export var dash_friction := 0.25
 
 export var gravity := 20
 export var gliding_gravity := 20
-export var sliding_speed := 5
+export var sliding_speed := 35
 export var vert_friction := 0.025
 export var horiz_friction := 0.2
 export var max_speed := 150.0
-export var max_skill_count := 5
+export var max_skill_count := 9
 
 const animation_unsquish_rate := 0.2
 const animation_jump_squish := Vector2(0.55, 1.6)
@@ -72,14 +73,26 @@ var wall_jump_timer := 0
 var super_jump_countdown := super_jump_charge_duration
 var show_menu := false
 var skill_count : int
-var skilltree : CenterContainer
+var skilltree : Node2D
 var on_walls_right := 0
 var on_walls_left := 0
-var is_sliding := false
+var can_wall_jump := 0 # 0 = cannot ; -1 = can left ; 1 = can right
+var can_wall_jump_timer := 0
 onready var animation_sprite_squisher := $SpriteWrapper
 onready var animation_sprite := $SpriteWrapper/Sprite
 onready var animation_player := $AnimationPlayer
 var animation_unsquish_state = AnimationUnsquishState.DOESNT_MATTER
+
+# Boutons
+onready var dash_button := $"SkilltreeZFixer/Dash Button"
+onready var jump1_button := $"SkilltreeZFixer/Jump1 Button"
+onready var jump2_button := $"SkilltreeZFixer/Jump2 Button"
+onready var lantern_button := $"SkilltreeZFixer/Lantern Button"
+onready var move_button := $"SkilltreeZFixer/Move Button"
+onready var glide_button := $"SkilltreeZFixer/Glide Button"
+onready var super_jump_button := $"SkilltreeZFixer/Super Jump Button"
+onready var platform_button := $"SkilltreeZFixer/Platform Button"
+onready var wall_jump_button := $"SkilltreeZFixer/Wall Jump Button"
 
 """
 Main functions
@@ -87,7 +100,7 @@ Main functions
 func _ready():
 	skill_count = calculate_skill_count()
 	print("Skill count:", skill_count)
-	skilltree = get_node("SkilltreeZFixer/Skilltree")
+	skilltree = get_node("SkilltreeZFixer")
 	
 
 func _physics_process(_delta):
@@ -103,8 +116,8 @@ func _physics_process(_delta):
 		return
 	fall()
 	sliding()
-	#if wall_jump():
-	#	return
+	if wall_jump():
+		return
 	move()
 	jump()
 	gliding()
@@ -181,29 +194,36 @@ func super_jump():
 	
 func sliding():	
 	if enabled_skills[Skills.WALL_JUMP]:
-		if Input.is_action_pressed("move_left") and Input.is_action_pressed("move_right"):
-			is_sliding = false
-			return
-		if ((on_walls_left > 0 and Input.is_action_pressed("move_left"))
-			or (on_walls_right > 0 and Input.is_action_pressed("move_right"))):
-			if enabled_skills[Skills.JUMP1] and enabled_skills[Skills.JUMP2]:
-				air_jumps = 1
-			is_sliding = true
-			velocity.y = sliding_speed
-			return
-	is_sliding = false
+		if (on_walls_left == 0) and (on_walls_right == 0):
+			can_wall_jump = 0
+		if on_walls_left > 0:
+			can_wall_jump = -1
+			if Input.is_action_pressed("move_left"):
+				velocity.y = sliding_speed
+				if enabled_skills[Skills.JUMP1] and enabled_skills[Skills.JUMP2]:
+					air_jumps = 1
+				if enabled_skills[Skills.DASH]:
+					dashes = 1
+				return
+		if on_walls_right > 0:
+			can_wall_jump = 1
+			if Input.is_action_pressed("move_right"):
+				velocity.y = sliding_speed
+				if enabled_skills[Skills.JUMP1] and enabled_skills[Skills.JUMP2]:
+					air_jumps = 1
+				if enabled_skills[Skills.DASH]:
+					dashes = 1
 			
 func wall_jump():
 	if wall_jump_timer > 0:
 		wall_jump_timer -= 1
-		velocity.x = (-direction) * wall_jump_speed
+		velocity = move_and_slide(velocity, Vector2.UP)
 		return true
-	if not is_sliding:
-		return false
-	if Input.is_action_just_pressed("jump"):
+	if (Input.is_action_just_pressed("jump")) and (can_wall_jump != 0):
 		wall_jump_timer = wall_jump_duration - 1
 		velocity.y -= jump_speed
-		velocity.x = direction * wall_jump_speed
+		velocity.x = (-can_wall_jump) * wall_jump_horiz_speed
+		velocity = move_and_slide(velocity, Vector2.UP)
 		return true
 	
 func gliding():
@@ -315,30 +335,41 @@ func _on_WallJumpRight_body_exited(_body : Node):
 
 func _on_Dash_Button_pressed():
 	enable_skill(Skills.DASH)
+	change_icon(Skills.DASH, "dash", dash_button)
 
 func _on_Jump1_Button_pressed():
 	enable_skill(Skills.JUMP1)
+	change_icon(Skills.JUMP1, "jump", jump1_button)
+	
 
 func _on_Jump2_Button_pressed():
 	enable_skill(Skills.JUMP2)
+	change_icon(Skills.JUMP2, "jump", jump2_button)
 
 func _on_Super_Jump_Button_pressed():
 	enable_skill(Skills.SUPER_JUMP)
+	change_icon(Skills.SUPER_JUMP, "super_jump", super_jump_button)
+	
 
 func _on_Move_Button_pressed():
 	enable_skill(Skills.MOVE)
+	change_icon(Skills.MOVE, "walk", move_button)
 
 func _on_Lantern_Button_pressed():
 	enable_skill(Skills.LANTERN)
+	change_icon(Skills.LANTERN, "lantern", lantern_button)
 
 func _on_Wall_Jump_Button_pressed():
 	enable_skill(Skills.WALL_JUMP)
+	change_icon(Skills.WALL_JUMP, "wall_jump", wall_jump_button)
 
 func _on_Glide_Button_pressed():
 	enable_skill(Skills.GLIDING)
+	change_icon(Skills.GLIDING, "glide", glide_button)
 
 func _on_Platform_Button_pressed():
 	enable_skill(Skills.RAISE_PLATFORM)
+	change_icon(Skills.RAISE_PLATFORM, "platform", platform_button)
 
 
 """
@@ -379,3 +410,10 @@ func enable_skill(skill: int): # type: Enum Skills
 	enabled_skills[skill] = true
 	skill_count += 1
 	print("Skill count:", skill_count)
+
+func change_icon(skill: int, skillname: String, button: TextureButton):
+	if enabled_skills[skill]:
+		skillname += "_act"
+	button.texture_normal = load("player/boutons/" + skillname + ".png")
+	button.texture_pressed = load("player/boutons/" + skillname + ".png")
+	button.texture_hover = load("player/boutons/" + skillname + ".png")

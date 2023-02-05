@@ -1,11 +1,9 @@
 extends KinematicBody2D
 
-export var pred_path : NodePath
-export var next_path : NodePath
 var pred : KinematicBody2D = null
 var next : KinematicBody2D = null
 var number
-
+const TILE_SIZE = 16
 
 """
 Test vars
@@ -36,14 +34,14 @@ func _physics_process(_delta):
 		if !pressed_pred:
 			pressed_pred = true
 			if is_first():
-				move_pred(Vector2.UP * 20)
+				move_pred(Vector2.UP * TILE_SIZE)
 		return
 	pressed_pred = false
 	if Input.is_key_pressed(KEY_BACKSPACE):
 		if !pressed_next:
 			pressed_next = true
 			if is_first():
-				move_next(Vector2.RIGHT * 20)
+				move_next(Vector2.UP * TILE_SIZE)
 		return
 	pressed_next = false
 
@@ -52,25 +50,20 @@ Move functions
 """
 
 func move_pred(move: Vector2):
-	if !can_move_pred(move):
-		return false 
 	var r := find_first()
+	if !can_move_pred(r, move):
+		return false 
 	move_pred_aux(r, r.position + move)
 
 
 func move_next(move: Vector2):
-	if !can_move_next(move):
-		return false 
 	var r := find_last()
+	if !can_move_next(r, move):
+		return false 
 	move_next_aux(r, r.position + move)
 
 
 
-
-
-
-	
-	
 """
 Utilities
 """
@@ -93,8 +86,26 @@ func find_last() -> KinematicBody2D:
 		return self
 	return next.find_last()
 
-func can_move_pred(_move: Vector2):
-	return true #TODO
+func can_move_pred(r: KinematicBody2D, move: Vector2):
+	if is_empty(r):
+		return true
+	if r.is_first():
+		return (is_free_root(r.position + move)
+			and is_free_platform(r.position + move)
+			and can_move_pred(r.next, r.position - r.next.position))
+	if r.is_last():
+		return is_free_platform(r.position + move)
+	#if r.platform != null:  	# Pseudocode
+	#	return (is_free_platform(r.position + move) 
+	#		and can_move_pred(r.next, r.position - r.next.position))
+	return can_move_pred(r.next, r.position - r.next.position)
+		
+func is_free_root(_pos: Vector2):
+	return true
+func is_free_platform(_pos: Vector2):
+	return true
+
+
 func move_pred_aux(r: KinematicBody2D, new_pos: Vector2):
 	if is_empty(r):
 		return
@@ -103,8 +114,19 @@ func move_pred_aux(r: KinematicBody2D, new_pos: Vector2):
 	move_pred_aux(r.next, old_pos)
 
 
-func can_move_next(_move: Vector2):
-	return true #TODO
+func can_move_next(r: KinematicBody2D, move: Vector2):
+	if is_empty(r):
+		return true
+	if r.is_last():
+		return (is_free_root(r.position + move)
+			and is_free_platform(r.position + move)
+			and can_move_next(r.pred, r.position - r.pred.position))
+	if r.is_first():
+		return is_free_platform(r.position + move)
+	#if r.platform != null:  	# Pseudocode
+	#	return (is_free_platform(r.position + move) 
+	#		and can_move_next(r.pred, r.position - r.pred.position))
+	return can_move_next(r.pred, r.position - r.pred.position)
 func move_next_aux(r: KinematicBody2D, new_pos: Vector2):
 	if is_empty(r):
 		return

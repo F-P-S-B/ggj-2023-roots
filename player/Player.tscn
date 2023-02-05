@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://player/Player.gd" type="Script" id=2]
 [ext_resource path="res://player/GridContainer.gd" type="Script" id=3]
@@ -70,6 +70,9 @@ tracks/0/keys = {
 "values": [ 1, 0 ]
 }
 
+[sub_resource type="RectangleShape2D" id=8]
+extents = Vector2( 1.5, 7 )
+
 [node name="Player" type="KinematicBody2D"]
 position = Vector2( 264, 55 )
 collision_mask = 4
@@ -96,6 +99,7 @@ drag_margin_v_enabled = true
 editor_draw_drag_margin = true
 
 [node name="SkilltreeZFixer" type="Node2D" parent="."]
+visible = false
 z_index = 5
 
 [node name="Skilltree" type="CenterContainer" parent="SkilltreeZFixer"]
@@ -107,96 +111,102 @@ rect_rotation = 45.0
 rect_pivot_offset = Vector2( 5, 0 )
 
 [node name="GridContainer" type="GridContainer" parent="SkilltreeZFixer/Skilltree"]
-margin_left = 97.0
-margin_top = 97.0
-margin_right = 153.0
-margin_bottom = 153.0
+margin_left = 125.0
+margin_top = 125.0
+margin_right = 125.0
+margin_bottom = 125.0
 grow_horizontal = 0
 grow_vertical = 2
 columns = 3
 script = ExtResource( 3 )
 
-[node name="Dash Button" type="TextureButton" parent="SkilltreeZFixer/Skilltree/GridContainer"]
-margin_right = 16.0
-margin_bottom = 16.0
+[node name="Dash Button" type="TextureButton" parent="SkilltreeZFixer"]
+margin_left = 1.46448
+margin_top = -69.8928
+margin_right = 17.4645
+margin_bottom = -53.8928
 hint_tooltip = "Ceci est un test"
 texture_normal = ExtResource( 4 )
 texture_pressed = ExtResource( 4 )
 texture_hover = ExtResource( 4 )
 
-[node name="Jump1 Button" type="TextureButton" parent="SkilltreeZFixer/Skilltree/GridContainer"]
-margin_left = 20.0
-margin_right = 36.0
-margin_bottom = 16.0
+[node name="Jump1 Button" type="TextureButton" parent="SkilltreeZFixer"]
+margin_left = 15.6066
+margin_top = -55.7507
+margin_right = 31.6066
+margin_bottom = -39.7507
 hint_tooltip = "Ceci est un test"
 texture_normal = ExtResource( 4 )
 texture_pressed = ExtResource( 4 )
 texture_hover = ExtResource( 4 )
 
-[node name="Jump2 Button" type="TextureButton" parent="SkilltreeZFixer/Skilltree/GridContainer"]
-margin_left = 40.0
-margin_right = 56.0
-margin_bottom = 16.0
+[node name="Jump2 Button" type="TextureButton" parent="SkilltreeZFixer"]
+margin_left = 29.7487
+margin_top = -41.6086
+margin_right = 45.7487
+margin_bottom = -25.6086
 hint_tooltip = "Ceci est un test"
 texture_normal = ExtResource( 4 )
 texture_pressed = ExtResource( 4 )
 texture_hover = ExtResource( 4 )
 
-[node name="Lantern Button" type="TextureButton" parent="SkilltreeZFixer/Skilltree/GridContainer"]
-margin_top = 20.0
-margin_right = 16.0
-margin_bottom = 36.0
+[node name="Lantern Button" type="TextureButton" parent="SkilltreeZFixer"]
+margin_left = -12.6777
+margin_top = -55.7507
+margin_right = 3.32234
+margin_bottom = -39.7507
 hint_tooltip = "Ceci est un test"
 texture_normal = ExtResource( 4 )
 texture_pressed = ExtResource( 4 )
 texture_hover = ExtResource( 4 )
 
-[node name="Move Button" type="TextureButton" parent="SkilltreeZFixer/Skilltree/GridContainer"]
-margin_left = 20.0
-margin_top = 20.0
-margin_right = 36.0
-margin_bottom = 36.0
+[node name="Move Button" type="TextureButton" parent="SkilltreeZFixer"]
+margin_left = 1.46448
+margin_top = -41.6086
+margin_right = 17.4645
+margin_bottom = -25.6086
 hint_tooltip = "Ceci est un test"
 texture_normal = ExtResource( 4 )
 texture_pressed = ExtResource( 4 )
 texture_hover = ExtResource( 4 )
 
-[node name="Glide Button" type="TextureButton" parent="SkilltreeZFixer/Skilltree/GridContainer"]
-margin_left = 40.0
-margin_top = 20.0
-margin_right = 56.0
-margin_bottom = 36.0
+[node name="Glide Button" type="TextureButton" parent="SkilltreeZFixer"]
+margin_left = 15.6066
+margin_top = -27.4664
+margin_right = 31.6066
+margin_bottom = -11.4664
 rect_pivot_offset = Vector2( -298.112, 575.868 )
 hint_tooltip = "Ceci est un test"
 texture_normal = ExtResource( 4 )
 texture_pressed = ExtResource( 4 )
 texture_hover = ExtResource( 4 )
 
-[node name="Super Jump Button" type="TextureButton" parent="SkilltreeZFixer/Skilltree/GridContainer"]
-margin_top = 40.0
-margin_right = 16.0
-margin_bottom = 56.0
+[node name="Super Jump Button" type="TextureButton" parent="SkilltreeZFixer"]
+margin_left = -26.8198
+margin_top = -41.6086
+margin_right = -10.8198
+margin_bottom = -25.6086
 hint_tooltip = "Ceci est un test"
 texture_normal = ExtResource( 4 )
 texture_pressed = ExtResource( 4 )
 texture_hover = ExtResource( 4 )
 
-[node name="Platform Button" type="TextureButton" parent="SkilltreeZFixer/Skilltree/GridContainer"]
-margin_left = 20.0
-margin_top = 40.0
-margin_right = 36.0
-margin_bottom = 56.0
+[node name="Platform Button" type="TextureButton" parent="SkilltreeZFixer"]
+margin_left = -12.6777
+margin_top = -27.4664
+margin_right = 3.32234
+margin_bottom = -11.4664
 rect_pivot_offset = Vector2( -298.112, 575.868 )
 hint_tooltip = "Ceci est un test"
 texture_normal = ExtResource( 4 )
 texture_pressed = ExtResource( 4 )
 texture_hover = ExtResource( 4 )
 
-[node name="Wall Jump Button" type="TextureButton" parent="SkilltreeZFixer/Skilltree/GridContainer"]
-margin_left = 40.0
-margin_top = 40.0
-margin_right = 56.0
-margin_bottom = 56.0
+[node name="Wall Jump Button" type="TextureButton" parent="SkilltreeZFixer"]
+margin_left = 1.46448
+margin_top = -13.3243
+margin_right = 17.4645
+margin_bottom = 2.67572
 hint_tooltip = "Ceci est un test"
 texture_normal = ExtResource( 4 )
 texture_pressed = ExtResource( 4 )
@@ -208,12 +218,33 @@ anims/Jump = SubResource( 5 )
 anims/RESET = SubResource( 7 )
 anims/Run = SubResource( 4 )
 
-[connection signal="pressed" from="SkilltreeZFixer/Skilltree/GridContainer/Dash Button" to="." method="_on_Dash_Button_pressed"]
-[connection signal="pressed" from="SkilltreeZFixer/Skilltree/GridContainer/Jump1 Button" to="." method="_on_Jump1_Button_pressed"]
-[connection signal="pressed" from="SkilltreeZFixer/Skilltree/GridContainer/Jump2 Button" to="." method="_on_Jump2_Button_pressed"]
-[connection signal="pressed" from="SkilltreeZFixer/Skilltree/GridContainer/Lantern Button" to="." method="_on_Lantern_Button_pressed"]
-[connection signal="pressed" from="SkilltreeZFixer/Skilltree/GridContainer/Move Button" to="." method="_on_Move_Button_pressed"]
-[connection signal="pressed" from="SkilltreeZFixer/Skilltree/GridContainer/Glide Button" to="." method="_on_Glide_Button_pressed"]
-[connection signal="pressed" from="SkilltreeZFixer/Skilltree/GridContainer/Super Jump Button" to="." method="_on_Super_Jump_Button_pressed"]
-[connection signal="pressed" from="SkilltreeZFixer/Skilltree/GridContainer/Platform Button" to="." method="_on_Platform_Button_pressed"]
-[connection signal="pressed" from="SkilltreeZFixer/Skilltree/GridContainer/Wall Jump Button" to="." method="_on_Wall_Jump_Button_pressed"]
+[node name="WallJumpLeft" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 8
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="WallJumpLeft"]
+position = Vector2( -5.4, 0 )
+shape = SubResource( 8 )
+
+[node name="WallJumpRight" type="Area2D" parent="."]
+position = Vector2( 0, 1 )
+collision_layer = 0
+collision_mask = 8
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="WallJumpRight"]
+position = Vector2( 5.4, -1 )
+shape = SubResource( 8 )
+
+[connection signal="pressed" from="SkilltreeZFixer/Dash Button" to="." method="_on_Dash_Button_pressed"]
+[connection signal="pressed" from="SkilltreeZFixer/Jump1 Button" to="." method="_on_Jump1_Button_pressed"]
+[connection signal="pressed" from="SkilltreeZFixer/Jump2 Button" to="." method="_on_Jump2_Button_pressed"]
+[connection signal="pressed" from="SkilltreeZFixer/Lantern Button" to="." method="_on_Lantern_Button_pressed"]
+[connection signal="pressed" from="SkilltreeZFixer/Move Button" to="." method="_on_Move_Button_pressed"]
+[connection signal="pressed" from="SkilltreeZFixer/Glide Button" to="." method="_on_Glide_Button_pressed"]
+[connection signal="pressed" from="SkilltreeZFixer/Super Jump Button" to="." method="_on_Super_Jump_Button_pressed"]
+[connection signal="pressed" from="SkilltreeZFixer/Platform Button" to="." method="_on_Platform_Button_pressed"]
+[connection signal="pressed" from="SkilltreeZFixer/Wall Jump Button" to="." method="_on_Wall_Jump_Button_pressed"]
+[connection signal="body_entered" from="WallJumpLeft" to="." method="_on_WallJumpLeft_body_entered"]
+[connection signal="body_exited" from="WallJumpLeft" to="." method="_on_WallJumpLeft_body_exited"]
+[connection signal="body_entered" from="WallJumpRight" to="." method="_on_WallJumpRight_body_entered"]
+[connection signal="body_exited" from="WallJumpRight" to="." method="_on_WallJumpRight_body_exited"]
