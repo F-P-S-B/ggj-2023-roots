@@ -106,7 +106,9 @@ onready var description_image : TextureRect= $"SkilltreeZFixer/RichTextLabel/Tex
 var last_hovered := -1
 
 # Sons
-var t : AudioStreamPlayer2D
+var wind_player : AudioStreamPlayer
+var wind_timer := 0
+var t : AudioStreamPlayer
 var sound_player_list := [t]
 var current_player_index := 0
 var bird_timer := 0
@@ -134,9 +136,16 @@ func _ready():
 	change_icon(Skills.GLIDING, "glide", glide_button)
 	change_icon(Skills.RAISE_PLATFORM, "platform", platform_button)
 	
-	sound_player_list[0] = AudioStreamPlayer2D.new()
-	for __ in range(1, 60):
-		sound_player_list.append(AudioStreamPlayer2D.new())
+	wind_player = AudioStreamPlayer.new()
+	wind_player.set_stream(preload("res://assets/AUDIO/SFX/bg/sfx_wind_bg.wav"))
+	add_child(wind_player)
+	sound_player_list[0] = AudioStreamPlayer.new()
+	add_child(sound_player_list[0])
+
+	for i in range(1, 60):
+		var a = AudioStreamPlayer.new()
+		sound_player_list.append(a)
+		add_child(a)
 	
 
 func _physics_process(_delta):
@@ -387,27 +396,43 @@ func animation_decide():
 Sounds
 """
 func play_sound():
-	var player: AudioStreamPlayer2D = sound_player_list[current_player_index]
+	if wind_timer <= 0:
+		wind_timer = 65*60 + int(rand_range(5, 10) * 60)
+		wind_player.set_volume_db(-20)
+		wind_player.play()
+	var player: AudioStreamPlayer = sound_player_list[current_player_index]
 	if bird_timer <= 0:
 		if bird_count > 0:
-			# TODO: play
+			var n:= randi() % 13 +1
+			player.set_stream(load("res://assets/AUDIO/SFX/bg/birds/sfx_bird_" + str(n) + ".wav"))
+			player.play()
 			update_player_index()
 			bird_timer = int(rand_range(1, 2) * 60)
 			bird_count -= 1
 		else:
+			
 			bird_count = int(rand_range(0, 2))
 			bird_timer = int(rand_range(30, 120) * 60)
 			
+	player = sound_player_list[current_player_index]
 		
 	if drop_timer <= 0:
 		if drop_count > 0:
-			# TODO: play
+			var n:= randi() % 4 +1
+			print("lfg")
+			player.set_stream(load("res://assets/AUDIO/SFX/bg/water/sfx_water_" + str(n) + ".wav"))
+			player.set_volume_db(20)
+			player.play()
+			update_player_index()
 			update_player_index()
 			drop_timer = int(rand_range(30, 90))
 			drop_count -= 1
 		else:
 			drop_count = int(rand_range(0, 5))
 			drop_timer = int(rand_range(30, 100) * 60)
+	wind_timer -= 1
+	bird_timer -= 1
+	drop_timer -= 1
 
 """
 Signals
