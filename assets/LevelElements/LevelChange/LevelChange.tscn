@@ -1,10 +1,10 @@
 [gd_scene load_steps=4 format=2]
 
-[ext_resource path="res://icon.png" type="Texture" id=1]
+[ext_resource path="res://assets/stele rouge.png" type="Texture" id=1]
 [ext_resource path="res://assets/LevelElements/LevelChange/LevelChange.gd" type="Script" id=2]
 
 [sub_resource type="RectangleShape2D" id=1]
-extents = Vector2( 32, 32 )
+extents = Vector2( 13.5, 13 )
 
 [node name="LevelChange" type="Area2D"]
 collision_layer = 128
@@ -12,6 +12,7 @@ collision_mask = 128
 script = ExtResource( 2 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2( 1, 2 )
 shape = SubResource( 1 )
 
 [node name="Sprite" type="Sprite" parent="."]
