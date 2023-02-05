@@ -344,13 +344,10 @@ func _on_WallJumpRight_body_entered(_body : Node):
 	
 func _on_WallJumpRight_body_exited(_body : Node):
 	on_walls_right -= 1
-<<<<<<< HEAD
 	print("cas4")
 	
-func _on_HitBox_body_entered(body):
+func _on_HitBox_body_entered(_body):
 	death()
-=======
->>>>>>> 1fb53eaa4aaa1cfce4de07714306d2de592cf1e3
 
 func _on_Dash_Button_pressed():
 	enable_skill(Skills.DASH)
@@ -366,6 +363,7 @@ func _on_Jump2_Button_pressed():
 	change_icon(Skills.JUMP2, "jump", jump2_button)
 
 func _on_Super_Jump_Button_pressed():
+	print("y")
 	enable_skill(Skills.SUPER_JUMP)
 	change_icon(Skills.SUPER_JUMP, "super_jump", super_jump_button)
 	
@@ -469,16 +467,7 @@ func enable_skill(skill: int): # type: Enum Skills
 func change_icon(skill: int, skillname: String, button: TextureButton):
 	if enabled_skills[skill]:
 		skillname += "_act"
-<<<<<<< HEAD
-	button.texture_normal = load("player/boutons/" + skillname + ".png")
-	button.texture_pressed = load("player/boutons/" + skillname + ".png")
-	button.texture_hover = load("player/boutons/" + skillname + ".png")
-
-
-
-=======
 	var button_name = "player/buttons/" + skillname + ".png"
 	button.texture_normal = load(button_name)
 	button.texture_pressed = load(button_name)
 	button.texture_hover = load(button_name)
->>>>>>> 1fb53eaa4aaa1cfce4de07714306d2de592cf1e3
