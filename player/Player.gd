@@ -26,7 +26,6 @@ export var jump_speed := 300
 export var air_jump_speed := 300
 export var super_jump_speed := 800
 export var super_jump_charge_duration := 120
-export var wall_jump_delay := 2
 export var wall_jump_duration := 3
 export var wall_jump_horiz_speed := 300
 export var dash_speed := 780
@@ -265,6 +264,9 @@ func lantern():
 	if not enabled_skills[Skills.LANTERN]:
 		return
 	pass
+	
+func death():
+	pass
 
 """
 Animation
@@ -332,6 +334,9 @@ func _on_WallJumpRight_body_entered(_body : Node):
 func _on_WallJumpRight_body_exited(_body : Node):
 	on_walls_right -= 1
 	print("cas4")
+	
+func _on_HitBox_body_entered(body):
+	death()
 
 func _on_Dash_Button_pressed():
 	enable_skill(Skills.DASH)
@@ -417,3 +422,6 @@ func change_icon(skill: int, skillname: String, button: TextureButton):
 	button.texture_normal = load("player/boutons/" + skillname + ".png")
 	button.texture_pressed = load("player/boutons/" + skillname + ".png")
 	button.texture_hover = load("player/boutons/" + skillname + ".png")
+
+
+

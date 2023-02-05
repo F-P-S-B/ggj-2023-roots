@@ -76,6 +76,7 @@ super_jump={
 2d_physics/layer_3="CollisionWall"
 2d_physics/layer_4="JumpableWall"
 2d_physics/layer_5="DeathZone"
+2d_physics/layer_6="InteractionStele"
 
 [physics]
 
