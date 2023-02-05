@@ -1,4 +1,4 @@
-extends AudioStreamPlayer2D
+extends AudioStreamPlayer
 
 
 var on_loop_tail := false
@@ -6,6 +6,7 @@ var intentionally_playing := true
 
 
 func _ready():
+	connect("finished", self, "_on_Music_finished")
 	stream = preload("res://Music/music_head.wav")
 
 func start_music():
