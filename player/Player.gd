@@ -86,6 +86,8 @@ onready var animation_sprite := $SpriteWrapper/Sprite
 onready var animation_player := $AnimationPlayer
 var animation_unsquish_state = AnimationUnsquishState.DOESNT_MATTER
 
+var interactibles_within_reach = []
+
 # Boutons
 onready var dash_button := $"SkilltreeZFixer/Dash Button"
 onready var jump1_button := $"SkilltreeZFixer/Jump1 Button"
@@ -302,6 +304,31 @@ func death():
 	is_dying = true
 	get_tree().reload_current_scene()
 
+func interact():
+	# Il faut créer un node qui a un Area2D sur le layer 7 (Interactibles)
+	# et implémenter la méthode get_interactible_type qui renvoie un str: le type
+	# de l'interactible
+	# Après faire ce que vous voulez dans le match
+	if len(interactibles_within_reach) == 0:
+		return
+	var closest = interactibles_within_reach[0]
+	var closests_distance_squared = (
+		closest.global_position - global_position
+	).length_squared()
+	for interactible in interactibles_within_reach:
+		var distance_squared = (
+			interactible.global_position - global_position
+		).length_squared()
+		if distance_squared >= closests_distance_squared:
+			return
+		closests_distance_squared = distance_squared
+		closest = interactible
+	match closest.get_interactible_type(): # str
+		"Test":
+			print("Test")
+		_:
+			pass
+
 """
 Animation
 """
@@ -437,6 +464,16 @@ func _on_Platform_Button_pressed():
 	enable_skill(Skills.RAISE_PLATFORM)
 	change_icon(Skills.RAISE_PLATFORM, "platform", platform_button)
 
+func _on_Interactible_enter(interactible: Node):
+	# Créer un Area2D sur le layer 7: Interactible
+	# Implémenter la fonction get_interactible_type sinon crash :3
+	# Faire ce que vous voulez dans le match
+	interactibles_within_reach.push_back(interactible)
+
+func _on_Interactible_leave(interactible: Node):
+	var index = interactibles_within_reach.find(interactible)
+	if index != -1:
+		interactibles_within_reach.pop_at(index)
 
 """
 Utilities
