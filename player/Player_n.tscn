@@ -114,10 +114,12 @@ drag_margin_v_enabled = true
 editor_draw_drag_margin = true
 
 [node name="SkilltreeZFixer" type="Node2D" parent="."]
+visible = false
 position = Vector2( -8, -55 )
 z_index = 5
 
 [node name="Sprite" type="Sprite" parent="SkilltreeZFixer"]
+visible = false
 position = Vector2( -280, -369 )
 texture = ExtResource( 11 )
 
@@ -214,6 +216,7 @@ margin_bottom = 15.0
 text = "n/m"
 
 [node name="RichTextLabel" type="RichTextLabel" parent="SkilltreeZFixer"]
+visible = false
 margin_left = -100.0
 margin_top = 50.0
 margin_right = 100.0
