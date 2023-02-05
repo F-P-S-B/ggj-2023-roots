@@ -98,6 +98,16 @@ onready var description_title : Label= $"SkilltreeZFixer/RichTextLabel/Title"
 onready var description_label : Label= $"SkilltreeZFixer/RichTextLabel/Label"
 onready var description_image : TextureRect= $"SkilltreeZFixer/RichTextLabel/TextureRect"
 var last_hovered := -1
+
+# Sons
+var t : AudioStreamPlayer2D
+var sound_player_list := [t]
+var current_player_index := 0
+var bird_timer := 0
+var bird_count := 0
+var drop_timer := 0
+var drop_count := 0
+
 """
 Main functions
 """
@@ -115,8 +125,13 @@ func _ready():
 	change_icon(Skills.GLIDING, "glide", glide_button)
 	change_icon(Skills.RAISE_PLATFORM, "platform", platform_button)
 	
+	sound_player_list[0] = AudioStreamPlayer2D.new()
+	for __ in range(1, 60):
+		sound_player_list.append(AudioStreamPlayer2D.new())
+	
 
 func _physics_process(_delta):
+	play_sound()
 	check_hover()
 	if toggle_menu():
 		return
@@ -327,6 +342,31 @@ func animation_decide():
 		animation_player.play("Idle")
 		return
 	animation_player.play("Jump")
+"""
+Sounds
+"""
+func play_sound():
+	var player: AudioStreamPlayer2D = sound_player_list[current_player_index]
+	if bird_timer <= 0:
+		if bird_count > 0:
+			# TODO: play
+			update_player_index()
+			bird_timer = int(rand_range(1, 2) * 60)
+			bird_count -= 1
+		else:
+			bird_count = int(rand_range(0, 2))
+			bird_timer = int(rand_range(30, 120) * 60)
+			
+		
+	if drop_timer <= 0:
+		if drop_count > 0:
+			# TODO: play
+			update_player_index()
+			drop_timer = int(rand_range(30, 90))
+			drop_count -= 1
+		else:
+			drop_count = int(rand_range(0, 5))
+			drop_timer = int(rand_range(30, 100) * 60)
 
 """
 Signals
@@ -464,3 +504,7 @@ func change_icon(skill: int, skillname: String, button: TextureButton):
 	button.texture_normal = load(button_name)
 	button.texture_pressed = load(button_name)
 	button.texture_hover = load(button_name)
+	
+func update_player_index():
+	current_player_index = (current_player_index + 1)%60
+
