@@ -148,15 +148,8 @@ func _ready():
 func _physics_process(_delta):
 	play_sound()
 	check_hover()
-	if Input.is_action_just_pressed("reset"):
-		death_timer = death_animation_length
+	if death():
 		return
-	if death_timer > 0:
-		#animation de mort, jsp comment ca marche
-		death_timer -= 1
-		return
-	if death_timer == 0:
-		get_tree().reload_current_scene()
 	if pre_interact_animation():
 		return
 	if post_interact_animation():
@@ -168,6 +161,9 @@ func _physics_process(_delta):
 	animation_unsquish()
 	if dash_timer == 0:
 		animation_flip_to_direction()
+	if Input.is_action_just_pressed("reset"):
+		death_timer = death_animation_length
+		return
 	if super_jump():
 		return
 	if dash():
@@ -179,6 +175,7 @@ func _physics_process(_delta):
 	move()
 	jump()
 	gliding()
+	roots_interact()
 	raise_platform()
 	lantern()
 	var __ = move_and_slide(velocity, Vector2.UP)
@@ -323,16 +320,21 @@ func lantern():
 	if not enabled_skills[Skills.LANTERN]:
 		return
 	pass
-	
+
 func death():
-	death_timer = death_animation_length
+	if death_timer == -1 :
+		return false
+	death_timer -= 1
+	if death_timer == -1:
+		get_tree().reload_current_scene()
+	return true
 
 func roots_interact():
 	# Il faut créer un node qui a un Area2D sur le layer 7 (Interactibles)
 	# et implémenter la méthode get_interactible_type qui renvoie un str: le type
 	# de l'interactible
 	# Après faire ce que vous voulez dans le match
-	if Input.is_action_just_pressed("interact"):
+	if Input.is_action_just_pressed("interact") and is_on_floor():
 		if len(interactibles_within_reach) == 0:
 			return
 		var closest = interactibles_within_reach[0]
@@ -455,7 +457,7 @@ func _on_WallJumpRight_body_exited(_body : Node):
 	on_walls_right -= 1
 	
 func _on_HitBox_area_entered(_body):
-	death()
+	death_timer = death_animation_length
 	
 func _on_InteractStele_area_entered(_body : Node):
 	can_open_menu += 1

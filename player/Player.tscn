@@ -108,7 +108,6 @@ hframes = 2
 vframes = 3
 
 [node name="Camera2D" type="Camera2D" parent="."]
-current = true
 drag_margin_h_enabled = true
 drag_margin_v_enabled = true
 editor_draw_drag_margin = true
