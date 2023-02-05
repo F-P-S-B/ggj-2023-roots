@@ -14,6 +14,10 @@ config/name="ggj_2023_roots"
 run/main_scene="res://Levels/Dev/DevLevel.tscn"
 config/icon="res://icon.png"
 
+[autoload]
+
+Music="*res://Music/Music.tscn"
+
 [display]
 
 window/size/width=320
@@ -53,14 +57,14 @@ jump={
 , Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":0,"physical_scancode":67,"unicode":0,"echo":false,"script":null)
  ]
 }
-toggle_menu={
-"deadzone": 0.5,
-"events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":0,"physical_scancode":59,"unicode":0,"echo":false,"script":null)
- ]
-}
 dash={
 "deadzone": 0.5,
 "events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":0,"physical_scancode":16777237,"unicode":0,"echo":false,"script":null)
+ ]
+}
+toggle_menu={
+"deadzone": 0.5,
+"events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":0,"physical_scancode":59,"unicode":0,"echo":false,"script":null)
  ]
 }
 super_jump={
