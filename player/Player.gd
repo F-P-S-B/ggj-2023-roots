@@ -75,7 +75,7 @@ var skill_count : int
 var skilltree : Node2D
 var on_walls_right := 0
 var on_walls_left := 0
-var is_sliding := false
+var can_wall_jump := 0 # 0 = cannot ; -1 = can left ; 1 = can right
 onready var animation_sprite_squisher := $SpriteWrapper
 onready var animation_sprite := $SpriteWrapper/Sprite
 onready var animation_player := $AnimationPlayer
