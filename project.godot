@@ -69,6 +69,14 @@ super_jump={
  ]
 }
 
+[layer_names]
+
+2d_physics/layer_1="Player"
+2d_physics/layer_2="Roots"
+2d_physics/layer_3="CollisionWall"
+2d_physics/layer_4="JumpableWall"
+2d_physics/layer_5="DeathZone"
+
 [physics]
 
 common/enable_pause_aware_picking=true
