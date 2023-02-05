@@ -299,7 +299,7 @@ func lantern():
 	pass
 	
 func death():
-	is_d
+	is_dying = true
 	get_tree().reload_current_scene()
 
 """
