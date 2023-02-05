@@ -1,5 +1,5 @@
 extends KinematicBody2D
-var platform_path := ""
+export var platform_path := ""
 var pred : KinematicBody2D = null
 var next : KinematicBody2D = null
 var platform : KinematicBody2D = null
@@ -47,7 +47,7 @@ func _physics_process(_delta):
 		if !pressed_next:
 			pressed_next = true
 			if is_first():
-				move_next()
+				move()
 		return
 	pressed_next = false
 
@@ -55,57 +55,76 @@ func _physics_process(_delta):
 Move functions
 """
 func move():
-	if ((!is_empty(pred) and pred.position.y == position.y) 
-	 && (!is_empty(next) and next.position.y == position.y)):
-		return false
-	if is_first() or pred.position.x > position.x or (!is_empty(next) and next.position.x < position.x):
+	#if ((!is_empty(pred) and pred.position.y == position.y) 
+	 #&& (!is_empty(next) and next.position.y == position.y)):
+		#return false
+	#if is_first() or pred.position.x > position.x or (!is_empty(next) and next.position.x < position.x):
 		#bouger vers pred
-		return move_pred()
+	#	return move_pred()
 	#bouger vers next
-	return move_next()
-
+	#return move_next()
+	if closest_first():
+		move_pred(Vector2.UP * 8)
+		return
+	move_next(Vector2.UP * 8)
+func closest_first():
+	var dl := 0
+	var r := self 
+	while !is_empty(r):
+		r = r.next
+		dl+=1
+	var dd := 0
+	r = self 
+	while !is_empty(r):
+		r = r.pred
+		dd+=1
+	return dl > dd
+	
 func can_move_up_pred():
 	var platform_can_move := true
 	if platform != null:
-		platform_can_move = platform.test_move(Transform2D(0.0, platform.position), Vector2.UP * 8)
+		platform_can_move = platform.test_move(Transform2D(0.0, platform.position), Vector2.UP * 64)
 	if is_first():
 		return platform_can_move
 	return platform_can_move && pred.can_move_up_pred()
 		
 func move_up_pred():
-	position += Vector2.UP *8
+	position += Vector2.UP *64
 	if self.is_first():
 		return
 	pred.move_up_pred()
 
-func move_pred():
+func move_pred(d):
 	if !can_move_up_pred() or (!is_last() and !can_move_pred(next, position - next.position)):
 		return false
 	var pos := position 
-	move_up_pred()
-	move_pred_aux(next, pos)
+	#move_up_pred()
+	var r = find_first()
+	move_pred_aux(r, r.position + d)
 
 
 func can_move_up_next():
 	var platform_can_move := true
 	if platform != null:
-		platform_can_move = platform.test_move(Transform2D(0.0, platform.position), Vector2.UP * 8)
-	if is_first():
+		platform_can_move = platform.test_move(Transform2D(0.0, platform.position), Vector2.UP * 64)
+	if is_last():
 		return platform_can_move
 	return platform_can_move && next.can_move_up_next()
 		
 func move_up_next():
-	position += Vector2.UP *8
+	position += Vector2.UP *64
 	if is_last():
 		return
 	next.move_up_next()
 
-func move_next():
+func move_next(dir):
 	if !can_move_up_next() or (!is_first() and !can_move_next(pred, position - pred.position)):
 		return false
 	var pos := position 
-	move_up_next()
-	move_next_aux(next, pos)
+	#move_up_next()
+	var r = find_last()
+	
+	move_next_aux(r, r.position + dir)
 
 
 """

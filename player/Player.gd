@@ -159,6 +159,8 @@ func _physics_process(_delta):
 	check_hover()
 	if death():
 		return
+		
+	roots_interact()
 	if pre_interact_animation():
 		return
 	if post_interact_animation():
@@ -184,7 +186,6 @@ func _physics_process(_delta):
 	move()
 	jump()
 	gliding()
-	roots_interact()
 	raise_platform()
 	lantern()
 	var __ = move_and_slide(velocity, Vector2.UP)
@@ -343,27 +344,28 @@ func roots_interact():
 	# et implémenter la méthode get_interactible_type qui renvoie un str: le type
 	# de l'interactible
 	# Après faire ce que vous voulez dans le match
-	if (pre_interact_timer == 0) and (post_interact_timer == 0):
-		return
 		
 	if (pre_interact_timer == 1):
+		
 		var closest = interactibles_within_reach[0]
-		var closests_distance_squared = (
-			closest.global_position - global_position
-		).length_squared()
-		for interactible in interactibles_within_reach:
-			var distance_squared = (
-				interactible.global_position - global_position
-			).length_squared()
-			if distance_squared >= closests_distance_squared:
+		#var closests_distance_squared = (
+		#	closest.global_position - global_position
+		#).length_squared()
+		#for interactible in interactibles_within_reach:
+			#var distance_squared = (
+			#	interactible.global_position - global_position
+			#).length_squared()
+			#if distance_squared >= closests_distance_squared:
+			#	return
+			#closests_distance_squared = distance_squared
+		print("yo2")
+		print(closest.name)
+		closest.move()
+	if (pre_interact_timer == 0) and (post_interact_timer == 0):
+		if Input.is_action_just_pressed("interact") and is_on_floor():
+			if len(interactibles_within_reach) == 0:
 				return
-			closests_distance_squared = distance_squared
-			closest = interactible
-			closest.move()
-	if Input.is_action_just_pressed("interact") and is_on_floor():
-		if len(interactibles_within_reach) == 0:
-			return
-		pre_interact_timer = pre_interact_animation_length
+			pre_interact_timer = pre_interact_animation_length
 
 """
 Animation
@@ -535,6 +537,7 @@ func _on_Interactible_enter(interactible: Node):
 	# Créer un Area2D sur le layer 7: Interactible
 	# Implémenter la fonction get_interactible_type sinon crash :3
 	# Faire ce que vous voulez dans le match
+	print("yo")
 	interactibles_within_reach.push_back(interactible)
 
 func _on_Interactible_leave(interactible: Node):
