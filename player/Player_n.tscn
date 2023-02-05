@@ -290,6 +290,9 @@ collision_mask = 32
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="InteractStele"]
 shape = SubResource( 10 )
+__meta__ = {
+"_edit_lock_": true
+}
 
 [node name="InteractBox" type="Area2D" parent="."]
 visible = false
@@ -299,6 +302,20 @@ collision_mask = 64
 [node name="CollisionShape2D" type="CollisionShape2D" parent="InteractBox"]
 position = Vector2( 4, -1 )
 shape = SubResource( 9 )
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="InteractLevelChange" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 128
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="InteractLevelChange"]
+position = Vector2( 4, -1 )
+shape = SubResource( 9 )
+__meta__ = {
+"_edit_lock_": true
+}
 
 [connection signal="pressed" from="SkilltreeZFixer/Super Jump Button" to="." method="_on_Super_Jump_Button_pressed"]
 [connection signal="pressed" from="SkilltreeZFixer/Jump1 Button" to="." method="_on_Jump1_Button_pressed"]
@@ -318,3 +335,5 @@ shape = SubResource( 9 )
 [connection signal="area_exited" from="InteractStele" to="." method="_on_InteractStele_area_exited"]
 [connection signal="area_entered" from="InteractBox" to="." method="_on_Interactible_enter"]
 [connection signal="area_exited" from="InteractBox" to="." method="_on_Interactible_leave"]
+[connection signal="area_entered" from="InteractLevelChange" to="." method="_on_InteractLevelChange_area_entered"]
+[connection signal="area_exited" from="InteractLevelChange" to="." method="_on_InteractLevelChange_area_exited"]
