@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=2]
+
+[sub_resource type="TileSet" id=2]
+
+[node name="TileDeathZone" type="TileMap"]
+tile_set = SubResource( 2 )
+show_collision = true
+format = 1
